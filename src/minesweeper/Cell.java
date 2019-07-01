@@ -1,6 +1,5 @@
 package minesweeper;
 
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 
 public class Cell extends Button {
@@ -12,26 +11,6 @@ public class Cell extends Button {
     private boolean open;
 
     public Cell(int row, int col, int adjMines, boolean mine, boolean flag, boolean open) {
-        this.setRow(row);
-        this.setCol(col);
-        this.setAdjMines(adjMines);
-        this.setMine(mine);
-        this.setFlag(flag);
-        this.setOpen(open);
-    }
-
-    public Cell(String s, int row, int col, int adjMines, boolean mine, boolean flag, boolean open) {
-        super(s);
-        this.setRow(row);
-        this.setCol(col);
-        this.setAdjMines(adjMines);
-        this.setMine(mine);
-        this.setFlag(flag);
-        this.setOpen(open);
-    }
-
-    public Cell(String s, Node node, int row, int col, int adjMines, boolean mine, boolean flag, boolean open) {
-        super(s, node);
         this.setRow(row);
         this.setCol(col);
         this.setAdjMines(adjMines);

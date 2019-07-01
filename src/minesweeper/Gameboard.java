@@ -15,7 +15,7 @@ public class Gameboard {
         this.setMatrix(matrix);
     }
 
-    public static Gameboard generateRandomGameboard(int height, int width, int mines, int y, int x) {
+    public static Gameboard generateGameboard(int height, int width, int mines, int y, int x) {
         Cell[][] matrix = new Cell[height][width];
         // initialize game metrix with empty cells
         for (int row = 0; row < height; row++) {
@@ -24,18 +24,16 @@ public class Gameboard {
             }
         }
         // put mines randomly into the matrix
-        for (int i=0;i<mines;i++) {
+        for (int i=0; i < mines; i++) {
             int row = getRandomInt(height);
             int col = getRandomInt(width);
-            if (!matrix[row][col].isMine() && row!=y && row!=x) {
-               // System.out.println(i + " mine in cell " + col +"," + row);
+            if (!matrix[row][col].isMine() && row!=y && row!=x)
                 matrix[row][col].setMine(true);
-            }
             else i--;
         }
         // find the number of adjacent mines for each cell, checking all 8 directions (if possible)
-        for (int row=0;row<height;row++) {
-            for (int col=0;col<width;col++) {
+        for (int row=0; row < height ; row++) {
+            for (int col=0;  col < width; col++) {
                 if (!matrix[row][col].isMine()) {
                     if (row>0 && col>0 && matrix[row-1][col-1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
                     if (col>0 && matrix[row][col-1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);

@@ -18,7 +18,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+import javafx.stage.StageStyle;
 
 public class Controller implements Initializable  {
 
@@ -29,6 +29,7 @@ public class Controller implements Initializable  {
     public Label labelWidth;
     public Label labelMines;
     public Button createButton;
+    public Button newGameButton;
     public GridPane gameGridPane;
     public AnchorPane mainAnchorPane;
     public VBox mainVBox;
@@ -46,7 +47,7 @@ public class Controller implements Initializable  {
         boardWidth.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>30)
+                if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>40)
                     boardWidth.setText(oldValue);
             }
         });
@@ -82,6 +83,7 @@ public class Controller implements Initializable  {
     }
 
     public void customGame (ActionEvent actionEvent) {
+        newGameButton.setVisible(false);
         labelHeight.setVisible(true);
         labelWidth.setVisible(true);
         labelMines.setVisible(true);
@@ -114,8 +116,11 @@ public class Controller implements Initializable  {
 
     private void generateEmptyGameGrid(int height, int width, int mines) {
         gameGridPane.getChildren().clear();
-        for (int row=0;row<height;row++)
-            for (int col=0;col<width;col++) {
+        newGameButton.setVisible(true);
+        newGameButton.setLayoutX(width*18 - 28);
+        newGameButton.setOnAction(e -> generateEmptyGameGrid(height,width,mines));
+        for (int row=0; row < height; row++)
+            for (int col=0; col < width; col++) {
                 Cell cell = new Cell(row,col,0,false,false,false);
                 gameGridPane.add(cell,col,row);
                 Image tile = new Image(getClass().getResourceAsStream("/images/tile.png"));
@@ -130,10 +135,10 @@ public class Controller implements Initializable  {
     }
 
     private void generateGameGrid(int height, int width, int mines,int y, int x) {
-        Gameboard gboard = Gameboard.generateRandomGameboard(height,width,mines,y,x);
+        Gameboard gboard = Gameboard.generateGameboard(height,width,mines,y,x);
         gameGridPane.getChildren().clear();
-        for (int row=0;row<height;row++)
-            for (int col=0;col<width;col++) {
+        for (int row=0; row < height; row++)
+            for (int col=0; col < width; col++) {
                 Cell cell = gboard.getMatrix()[row][col];
                 gameGridPane.add(cell,col,row);
                 Image tile = new Image(getClass().getResourceAsStream("/images/tile.png"));
@@ -151,7 +156,7 @@ public class Controller implements Initializable  {
                 });
             }
         checkCell(gboard,y,x);
-        printGameBoard(gboard,height,width);
+        //printGameBoard(gboard,height,width); // for testing
     }
 
     private void checkCell (Gameboard gboard, int row, int col) {
@@ -160,7 +165,7 @@ public class Controller implements Initializable  {
         Cell[][] matrix = gboard.getMatrix();
         int height = gboard.getHeight();
         int width = gboard.getWidth();
-        //System.out.println("Checking cell at row " + row + " column " + col + "(" + height + "," + width + ")");
+
         if (cell.isMine()) {
             gameover(gboard);
             return;
@@ -168,7 +173,7 @@ public class Controller implements Initializable  {
         showCell(gboard,row,col);
         if (check_win(gboard))
             System.out.println("You won malaka!");
-        if (cell.getAdjMines()>0) return;
+        if (cell.getAdjMines() > 0) return;
         if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()==0)
             checkCell(gboard,row-1,col-1);
         else if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()>0)
@@ -258,8 +263,8 @@ public class Controller implements Initializable  {
     private boolean check_win(Gameboard gboard) {
         int height = gboard.getHeight();
         int width = gboard.getWidth();
-        for (int i=0; i<height; i++)
-            for (int j=0; j<width; j++)
+        for (int i=0; i < height; i++)
+            for (int j=0; j < width; j++)
                 if (!gboard.getMatrix()[i][j].isOpen() && !gboard.getMatrix()[i][j].isMine())
                     return false;
         return true;
@@ -269,15 +274,15 @@ public class Controller implements Initializable  {
         System.out.println("YOU CLICKED ON A MINE! GAME OVER CARALHO!");
         int height = gboard.getHeight();
         int width = gboard.getWidth();
-        for (int i=0; i<height; i++)
-            for (int j=0; j<width; j++)
+        for (int i=0; i < height; i++)
+            for (int j=0; j < width; j++)
                 if (gboard.getMatrix()[i][j].isMine())
                     showCell(gboard,i,j);
     }
 
     private void printGameBoard (Gameboard gboard, int height, int width) {
-        for (int row=0;row<height;row++) {
-            for (int col=0;col<width;col++) {
+        for (int row=0; row < height; row++) {
+            for (int col=0; col < width; col++) {
                 if (gboard.getMatrix()[row][col].isMine())
                     System.out.print("| M ");
                 else System.out.print("| " + gboard.getMatrix()[row][col].getAdjMines() + " ");
@@ -294,6 +299,7 @@ public class Controller implements Initializable  {
         Stage about = new Stage();
         about.initModality(Modality.APPLICATION_MODAL);
         about.setTitle("About Minesweeper");
+        about.initStyle(StageStyle.UTILITY);
         Label l1 = new Label("A Minesweeper clone made in Java and JavaFX");
         Label l2 = new Label("by Nikolaos Perris");
         Hyperlink email = new Hyperlink("nperris@gmail.com");
@@ -311,7 +317,6 @@ public class Controller implements Initializable  {
         layout.getChildren().addAll(l1,l2,email,l3,btn);
         layout.setAlignment(Pos.CENTER);
         Scene scn = new Scene(layout,300,130);
-        about.getIcons().add(new Image(Controller.class.getResourceAsStream("/images/mineicon2.png")));
         about.setResizable(false);
         about.setScene(scn);
         about.showAndWait();
@@ -320,7 +325,8 @@ public class Controller implements Initializable  {
     public void helpWindow(ActionEvent actionEvent) {
         Stage help = new Stage();
         help.setTitle("Help");
-        Label l1 = new Label("Do you really need help to play Minesweeper? It plays just like the classic Windows Minesweeper. Choose a difficulty level or make your own custom game and have fun!");
+        help.initStyle(StageStyle.UTILITY);
+        Label l1 = new Label("This Minesweeper clone plays just like the classic Windows Minesweeper. Choose a difficulty level or make your own custom game and have fun!");
         l1.setWrapText(true);
         l1.setPadding(new Insets(10));
         Button btn = new Button ("CLOSE");
@@ -328,7 +334,6 @@ public class Controller implements Initializable  {
         VBox layout = new VBox(3);
         layout.getChildren().addAll(l1,btn);
         layout.setAlignment(Pos.CENTER);
-        help.getIcons().add(new Image(Controller.class.getResourceAsStream("/images/mineicon2.png")));
         Scene scn = new Scene(layout,330,140);
         help.setScene(scn);
         help.showAndWait();
