@@ -1,7 +1,6 @@
 package minesweeper;
 
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 import javafx.animation.AnimationTimer;
@@ -323,10 +322,12 @@ public class Controller implements Initializable  {
         if (!cell.isFlag()) {
             tile = new Image(getClass().getResourceAsStream("/images/flag.png"));
             cell.setFlag(true);
+            minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())-1));
         }
         else {
             tile = new Image(getClass().getResourceAsStream("/images/tile.png"));
             cell.setFlag(false);
+            minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())+1));
         }
         tileV = new ImageView(tile);
         tileV.setFitHeight(35.0);
@@ -335,12 +336,22 @@ public class Controller implements Initializable  {
         cell.setGraphic(tileV);
     }
 
+    private int countFlags(Gameboard gboard) {
+        int count=0;
+        int height = gboard.getHeight();
+        int width = gboard.getWidth();
+        for (int row=0; row < height; row++)
+            for (int col=0; col < width; col++)
+                if (gboard.getMatrix()[row][col].isFlag()) count++;
+        return count;
+    }
+
     private boolean check_win(Gameboard gboard) {
         int height = gboard.getHeight();
         int width = gboard.getWidth();
-        for (int i=0; i < height; i++)
-            for (int j=0; j < width; j++)
-                if (!gboard.getMatrix()[i][j].isOpen() && !gboard.getMatrix()[i][j].isMine())
+        for (int row = 0; row < height; row++)
+            for (int col = 0; col < width; col++)
+                if (!gboard.getMatrix()[row][col].isOpen() && !gboard.getMatrix()[row][col].isMine())
                     return false;
         return true;
     }
@@ -351,18 +362,18 @@ public class Controller implements Initializable  {
         int height = gboard.getHeight();
         int width = gboard.getWidth();
 
-        for (int i=0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                gboard.getMatrix()[i][j].setOpen(true);
-                if (gboard.getMatrix()[i][j].isMine())
-                    showCell(gboard, i, j);
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                gboard.getMatrix()[row][col].setOpen(true);
+                if (gboard.getMatrix()[row][col].isMine())
+                    showCell(gboard, row, col);
             }
         }
     }
 
     private void printGameBoard (Gameboard gboard, int height, int width) {
-        for (int row=0; row < height; row++) {
-            for (int col=0; col < width; col++) {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
                 if (gboard.getMatrix()[row][col].isMine())
                     System.out.print("| M ");
                 else System.out.print("| " + gboard.getMatrix()[row][col].getAdjMines() + " ");
