@@ -12,7 +12,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("board.fxml"));
-        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/mineicon2.png")));
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icon.png")));
         primaryStage.setTitle("Minesweeper");
         primaryStage.setScene(new Scene(root, 343, 420));
         primaryStage.setResizable(false);
