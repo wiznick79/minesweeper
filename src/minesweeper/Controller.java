@@ -1,6 +1,7 @@
 package minesweeper;
 
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 import javafx.animation.AnimationTimer;
@@ -21,6 +22,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -41,6 +45,7 @@ public class Controller implements Initializable  {
     public Label timeLabel;
     public Label tLabel;
     public Label mLabel;
+    public Label minesLabel;
 
     private DoubleProperty time = new SimpleDoubleProperty();
 
@@ -70,7 +75,15 @@ public class Controller implements Initializable  {
             }
         });
 
-        timeLabel.textProperty().bind(time.asString("%.0f"));
+        tLabel.setFont(Font.font("Arial", 14));
+        timeLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
+        timeLabel.setTextFill(Color.RED);
+        timeLabel.textProperty().bind(time.asString("%03.0f"));
+
+        mLabel.setFont(Font.font("Arial",14));
+        minesLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
+        minesLabel.setTextFill(Color.RED);
+
     }
 
     private AnimationTimer timer = new AnimationTimer() {
@@ -94,7 +107,8 @@ public class Controller implements Initializable  {
         @Override
         public void handle (long timestamp) {
             long now = System.currentTimeMillis();
-            time.set((now - startTime) / 1000.0);
+            double t = (now - startTime) / 1000.0;
+            time.set(t);
         }
     };
 
@@ -153,7 +167,15 @@ public class Controller implements Initializable  {
 
     private void generateEmptyGameGrid(int height, int width, int mines) {
         gameGridPane.getChildren().clear();
-        timeLabel.setVisible(false);
+        tLabel.setVisible(true);
+        timer.stop();
+        time.setValue(0);
+        timeLabel.setVisible(true);
+        mLabel.setLayoutX(width*36-40);
+        mLabel.setVisible(true);
+        minesLabel.setLayoutX(width*36-30);
+        minesLabel.setVisible(true);
+        minesLabel.setText(Integer.toString(mines));
         newGameButton.setVisible(true);
         newGameButton.setLayoutX(width*18 - 28);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(height,width,mines));
@@ -175,7 +197,6 @@ public class Controller implements Initializable  {
     private void generateGameGrid(int height, int width, int mines,int y, int x) {
         Gameboard gboard = Gameboard.generateGameboard(height,width,mines,y,x);
         gameGridPane.getChildren().clear();
-        tLabel.setVisible(true);
         timeLabel.setVisible(true);
         timer.start();
         for (int row=0; row < height; row++)
