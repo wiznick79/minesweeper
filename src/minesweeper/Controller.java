@@ -297,7 +297,7 @@ public class Controller implements Initializable  {
     private void flagCell(Gameboard gboard, int row, int col)  {
         Cell cell = gboard.getMatrix()[row][col];
         if (cell.isOpen()) return;
-        Image tile = null;
+        Image tile;
         ImageView tileV;
         if (!cell.isFlag()) {
             tile = new Image(getClass().getResourceAsStream("/images/flag.png"));
