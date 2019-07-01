@@ -38,6 +38,9 @@
         <TextField fx:id="boardWidth" layoutX="80.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
         <TextField fx:id="boardMines" layoutX="150.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
         <Button fx:id="createButton" layoutX="220.0" layoutY="25.0" mnemonicParsing="false" onAction="#createCustomGame" text="Create board" visible="false" />
+        <Label fx:id="tLabel" layoutX="25.0" text="Time: " visible="false" />
+        <Label fx:id="timeLabel" layoutX="58.0" text="000" visible="false" />
+        <Label fx:id="mLabel" layoutX="250" visible="false" />
         <Button fx:id="newGameButton" layoutY="25.0" mnemonicParsing="false" text="New Game" visible="false" />
           <GridPane fx:id="gameGridPane" alignment="TOP_CENTER" layoutY="50.0" hgap="1.0" vgap="1.0">
                <padding>

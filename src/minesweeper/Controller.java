@@ -3,7 +3,12 @@ package minesweeper;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -33,6 +38,11 @@ public class Controller implements Initializable  {
     public GridPane gameGridPane;
     public AnchorPane mainAnchorPane;
     public VBox mainVBox;
+    public Label timeLabel;
+    public Label tLabel;
+    public Label mLabel;
+
+    private DoubleProperty time = new SimpleDoubleProperty();
 
     @Override
     public void initialize (URL location, ResourceBundle resources){
@@ -59,7 +69,34 @@ public class Controller implements Initializable  {
                     boardMines.setText(oldValue);
             }
         });
+
+        timeLabel.textProperty().bind(time.asString("%.0f"));
     }
+
+    private AnimationTimer timer = new AnimationTimer() {
+
+        private long startTime;
+        BooleanProperty running = new SimpleBooleanProperty();
+
+        @Override
+        public void start() {
+            startTime = System.currentTimeMillis();
+            running.set(true);
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            running.set(false);
+            super.stop();
+        }
+
+        @Override
+        public void handle (long timestamp) {
+            long now = System.currentTimeMillis();
+            time.set((now - startTime) / 1000.0);
+        }
+    };
 
     public void easyGame(ActionEvent actionEvent) {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
@@ -95,11 +132,11 @@ public class Controller implements Initializable  {
 
     public void createCustomGame(ActionEvent actionEvent) {
         int height,width,mines;
-        if (boardHeight.getText().isBlank()) height=9;
+        if (boardHeight.getText().isEmpty()) height=9;
         else height = Integer.parseInt(boardHeight.getText());
-        if (boardWidth.getText().isBlank()) width=9;
+        if (boardWidth.getText().isEmpty()) width=9;
         else width = Integer.parseInt(boardWidth.getText());
-        if (boardMines.getText().isBlank()) mines=10;
+        if (boardMines.getText().isEmpty()) mines=10;
         else mines = Integer.parseInt(boardMines.getText());
         labelHeight.setVisible(false);
         labelWidth.setVisible(false);
@@ -116,6 +153,7 @@ public class Controller implements Initializable  {
 
     private void generateEmptyGameGrid(int height, int width, int mines) {
         gameGridPane.getChildren().clear();
+        timeLabel.setVisible(false);
         newGameButton.setVisible(true);
         newGameButton.setLayoutX(width*18 - 28);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(height,width,mines));
@@ -137,6 +175,9 @@ public class Controller implements Initializable  {
     private void generateGameGrid(int height, int width, int mines,int y, int x) {
         Gameboard gboard = Gameboard.generateGameboard(height,width,mines,y,x);
         gameGridPane.getChildren().clear();
+        tLabel.setVisible(true);
+        timeLabel.setVisible(true);
+        timer.start();
         for (int row=0; row < height; row++)
             for (int col=0; col < width; col++) {
                 Cell cell = gboard.getMatrix()[row][col];
@@ -161,19 +202,32 @@ public class Controller implements Initializable  {
 
     private void checkCell (Gameboard gboard, int row, int col) {
         Cell cell = gboard.getMatrix()[row][col];
-        if (cell.isOpen() || cell.isFlag()) return;
+
+        if (cell.isOpen() || cell.isFlag()) return;     // if the cell is already opened or is flagged, nothing happens
+
         Cell[][] matrix = gboard.getMatrix();
         int height = gboard.getHeight();
         int width = gboard.getWidth();
 
-        if (cell.isMine()) {
+        if (cell.isMine()) {    // if cell contains a mine, then game over !
             gameover(gboard);
             return;
         }
-        showCell(gboard,row,col);
-        if (check_win(gboard))
-            System.out.println("You won malaka!");
-        if (cell.getAdjMines() > 0) return;
+
+        showCell(gboard,row,col);   // show the cell
+
+        if (check_win(gboard)) {    // check winning condition
+            timer.stop();
+            System.out.println("Malaka you won!! Your time was " + timeLabel.getText() + " seconds.");
+            for (int i=0; i < gboard.getHeight(); i++) {
+                for (int j = 0; j < gboard.getWidth(); j++) {
+                    gboard.getMatrix()[i][j].setOpen(true);
+                }
+            }
+        }
+
+        if (cell.getAdjMines() > 0) return;     // if cell has number in it, end function
+        // if cell is empty, check it's adjacent cells, recursively
         if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()==0)
             checkCell(gboard,row-1,col-1);
         else if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()>0)
@@ -271,13 +325,18 @@ public class Controller implements Initializable  {
     }
 
     private void gameover(Gameboard gboard) {
+        timer.stop();
         System.out.println("YOU CLICKED ON A MINE! GAME OVER CARALHO!");
         int height = gboard.getHeight();
         int width = gboard.getWidth();
-        for (int i=0; i < height; i++)
-            for (int j=0; j < width; j++)
+
+        for (int i=0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                gboard.getMatrix()[i][j].setOpen(true);
                 if (gboard.getMatrix()[i][j].isMine())
-                    showCell(gboard,i,j);
+                    showCell(gboard, i, j);
+            }
+        }
     }
 
     private void printGameBoard (Gameboard gboard, int height, int width) {
