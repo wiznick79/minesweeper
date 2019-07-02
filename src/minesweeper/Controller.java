@@ -373,7 +373,6 @@ public class Controller implements Initializable  {
         if (win) {
             msgLabel.setText("YOU WON!");
             int score = Integer.parseInt(timeLabel.getText());
-            System.out.println("Malaka you won!! Your time was " + score + " seconds.");
             if (gboard.getDifficulty().equals("easy") && score<scores[0])
                 scores[0]=score;
             else if (gboard.getDifficulty().equals("normal") && score<scores[1])
@@ -382,10 +381,7 @@ public class Controller implements Initializable  {
                 scores[2]=score;
             saveScores();
         }
-        else {
-            System.out.println("YOU CLICKED ON A MINE! GAME OVER CARALHO!");
-            msgLabel.setText("YOU LOST!");
-        }
+        else msgLabel.setText("YOU LOST!");
 
         msgLabel.setLayoutX(width*18 - 28);
         msgLabel.setVisible(true);
