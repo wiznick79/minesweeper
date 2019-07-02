@@ -50,7 +50,7 @@ public class Controller implements Initializable  {
     public Label msgLabel;
 
     private DoubleProperty time = new SimpleDoubleProperty();
-    private int[] scores = new int[]{9999,9999,9999};
+    private int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
 
     @Override
     public void initialize (URL location, ResourceBundle resources){
@@ -372,14 +372,14 @@ public class Controller implements Initializable  {
 
         if (win) {
             msgLabel.setText("YOU WON!");
-            int time = Integer.parseInt(timeLabel.getText());
-            System.out.println("Malaka you won!! Your time was " + time + " seconds.");
-            if (gboard.getDifficulty().equals("easy") && time<scores[0])
-                scores[0]=time;
-            else if (gboard.getDifficulty().equals("normal") && time<scores[1])
-                scores[1]=time;
-            else if (gboard.getDifficulty().equals("hard") && time<scores[2])
-                scores[2]=time;
+            int score = Integer.parseInt(timeLabel.getText());
+            System.out.println("Malaka you won!! Your time was " + score + " seconds.");
+            if (gboard.getDifficulty().equals("easy") && score<scores[0])
+                scores[0]=score;
+            else if (gboard.getDifficulty().equals("normal") && score<scores[1])
+                scores[1]=score;
+            else if (gboard.getDifficulty().equals("hard") && score<scores[2])
+                scores[2]=score;
             saveScores();
         }
         else {
