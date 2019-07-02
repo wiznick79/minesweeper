@@ -26,6 +26,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -40,9 +41,14 @@ public class Controller implements Initializable  {
     public Label labelMines;
     public Button createButton;
     public Button newGameButton;
+    public Button easyGameButton;
+    public Button normalGameButton;
+    public Button hardGameButton;
+    public Button customGameButton;
     public GridPane gameGridPane;
     public AnchorPane mainAnchorPane;
     public VBox mainVBox;
+    public Text title;
     public Label timeLabel;
     public Label tLabel;
     public Label mLabel;
@@ -144,6 +150,11 @@ public class Controller implements Initializable  {
     }
 
     public void customGame (ActionEvent actionEvent) {
+        title.setVisible(false);
+        easyGameButton.setVisible(false);
+        normalGameButton.setVisible(false);
+        hardGameButton.setVisible(false);
+        customGameButton.setVisible(false);
         tLabel.setVisible(false);
         timeLabel.setVisible(false);
         mLabel.setVisible(false);
@@ -167,13 +178,6 @@ public class Controller implements Initializable  {
         else width = Integer.parseInt(boardWidth.getText());
         if (boardMines.getText().isEmpty()) mines=10;
         else mines = Integer.parseInt(boardMines.getText());
-        labelHeight.setVisible(false);
-        labelWidth.setVisible(false);
-        labelMines.setVisible(false);
-        boardHeight.setVisible(false);
-        boardWidth.setVisible(false);
-        boardMines.setVisible(false);
-        createButton.setVisible(false);
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         stage.setWidth(width*36+35);
         stage.setHeight(height*36+135);
@@ -181,6 +185,18 @@ public class Controller implements Initializable  {
     }
 
     private void generateEmptyGameGrid(int height, int width, int mines, String difficulty) {
+        title.setVisible(false);
+        labelHeight.setVisible(false);
+        labelWidth.setVisible(false);
+        labelMines.setVisible(false);
+        boardHeight.setVisible(false);
+        boardWidth.setVisible(false);
+        boardMines.setVisible(false);
+        easyGameButton.setVisible(false);
+        normalGameButton.setVisible(false);
+        hardGameButton.setVisible(false);
+        customGameButton.setVisible(false);
+        createButton.setVisible(false);
         gameGridPane.getChildren().clear();
         tLabel.setVisible(true);
         timer.stop();
