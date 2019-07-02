@@ -29,8 +29,8 @@ public class Gameboard {
         for (int i=0; i < mines; i++) {
             int row = getRandomInt(height);
             int col = getRandomInt(width);
-            if (!matrix[row][col].isMine() && row!=y && row!=x)
-                matrix[row][col].setMine(true);
+            if (!matrix[row][col].isMine() && row!=y && row!=x)     // don't put mine on top of an existing one
+                matrix[row][col].setMine(true);                     // also exclude the opening tile (first tile the player clicked)
             else i--;
         }
         // find the number of adjacent mines for each cell, checking all 8 directions (if possible)
