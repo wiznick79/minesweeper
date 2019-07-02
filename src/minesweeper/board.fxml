@@ -12,8 +12,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="mainAnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.Controller">
-  <VBox fx:id="mainVBox" prefHeight="500.0" prefWidth="600.0">
-    <MenuBar VBox.vgrow="ALWAYS">
+  <VBox fx:id="mainVBox">
+    <MenuBar>
       <Menu mnemonicParsing="false" text="Game">
         <Menu mnemonicParsing="false" text="New Game">
           <MenuItem mnemonicParsing="false" onAction="#easyGame" text="Easy (9x9, 10 mines)" />
@@ -22,7 +22,7 @@
           <MenuItem mnemonicParsing="false" onAction="#customGame" text="Custom" />
         </Menu>
         <MenuItem mnemonicParsing="false" text="Settings" />
-        <MenuItem mnemonicParsing="false" text="Best scores" />
+        <MenuItem mnemonicParsing="false" onAction="#scoresWindow" text="Best scores" />
         <MenuItem mnemonicParsing="false" onAction="#handleQuit" text="Exit Game" />
       </Menu>
       <Menu mnemonicParsing="false" text="Help">
@@ -30,7 +30,7 @@
         <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
       </Menu>
     </MenuBar>
-      <AnchorPane prefHeight="490.0" prefWidth="600.0">
+      <AnchorPane prefHeight="343.0" prefWidth="420.0">
         <Label fx:id="labelHeight" layoutX="15.0" layoutY="5.0" text="Height:" visible="false" />
         <Label fx:id="labelWidth" layoutX="85.0" layoutY="5.0" text="Width:" visible="false" />
         <Label fx:id="labelMines" layoutX="155.0" layoutY="5.0" text="Mines:" visible="false" />

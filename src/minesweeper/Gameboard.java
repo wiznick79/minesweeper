@@ -7,15 +7,17 @@ public class Gameboard {
     private int width;
     private int mines;
     private Cell[][] matrix;
+    private String difficulty;
 
-    private Gameboard(int height, int width, int mines, Cell[][] matrix) {
+    private Gameboard(int height, int width, int mines, Cell[][] matrix, String difficulty) {
         this.setHeight(height);
         this.setWidth(width);
         this.setMines(mines);
         this.setMatrix(matrix);
+        this.setDifficulty(difficulty);
     }
 
-    public static Gameboard generateGameboard(int height, int width, int mines, int y, int x) {
+    public static Gameboard generateGameboard(int height, int width, int mines, String difficulty, int y, int x) {
         Cell[][] matrix = new Cell[height][width];
         // initialize game metrix with empty cells
         for (int row = 0; row < height; row++) {
@@ -46,7 +48,7 @@ public class Gameboard {
                 }
             }
         }
-        return new Gameboard(height,width,mines,matrix);
+        return new Gameboard(height,width,mines,matrix,difficulty);
     }
 
     private static int getRandomInt(int max) {
@@ -85,4 +87,8 @@ public class Gameboard {
     private void setMines(int mines) {
         this.mines = mines;
     }
+
+    public String getDifficulty() { return difficulty; }
+
+    public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
 }

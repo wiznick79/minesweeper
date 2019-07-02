@@ -1,5 +1,6 @@
 package minesweeper;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -12,6 +13,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -48,6 +50,7 @@ public class Controller implements Initializable  {
     public Label msgLabel;
 
     private DoubleProperty time = new SimpleDoubleProperty();
+    private int[] scores = new int[]{9999,9999,9999};
 
     @Override
     public void initialize (URL location, ResourceBundle resources){
@@ -86,6 +89,11 @@ public class Controller implements Initializable  {
 
         msgLabel.setFont(Font.font("Arial", FontWeight.BOLD,14));
         msgLabel.setTextFill(Color.BLUE);
+        try {
+            loadScores();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private AnimationTimer timer = new AnimationTimer() {
@@ -118,21 +126,21 @@ public class Controller implements Initializable  {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         stage.setWidth(359);
         stage.setHeight(459);
-        generateEmptyGameGrid(9,9,10);
+        generateEmptyGameGrid(9,9,10,"easy");
     }
 
     public void normalGame(ActionEvent actionEvent) {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         stage.setWidth(611);
         stage.setHeight(711);
-        generateEmptyGameGrid(16,16,40);
+        generateEmptyGameGrid(16,16,40,"normal");
     }
 
     public void hardGame(ActionEvent actionEvent) {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         stage.setWidth(935);
         stage.setHeight(855);
-        generateEmptyGameGrid(20,25,99);
+        generateEmptyGameGrid(20,25,99,"hard");
     }
 
     public void customGame (ActionEvent actionEvent) {
@@ -169,10 +177,10 @@ public class Controller implements Initializable  {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         stage.setWidth(width*36+35);
         stage.setHeight(height*36+135);
-        generateEmptyGameGrid(height,width,mines);
+        generateEmptyGameGrid(height,width,mines,"custom");
     }
 
-    private void generateEmptyGameGrid(int height, int width, int mines) {
+    private void generateEmptyGameGrid(int height, int width, int mines, String difficulty) {
         gameGridPane.getChildren().clear();
         tLabel.setVisible(true);
         timer.stop();
@@ -186,7 +194,7 @@ public class Controller implements Initializable  {
         msgLabel.setVisible(false);
         newGameButton.setVisible(true);
         newGameButton.setLayoutX(width*18 - 28);
-        newGameButton.setOnAction(e -> generateEmptyGameGrid(height,width,mines));
+        newGameButton.setOnAction(e -> generateEmptyGameGrid(height,width,mines,difficulty));
         for (int row=0; row < height; row++)
             for (int col=0; col < width; col++) {
                 Cell cell = new Cell(row,col,0,false,false,false);
@@ -198,12 +206,12 @@ public class Controller implements Initializable  {
                 cell.setPadding(new Insets(0));
                 cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
                 cell.setGraphic(tileV);
-                cell.setOnAction(e -> generateGameGrid(height, width, mines, cell.getRow(), cell.getCol()));
+                cell.setOnAction(e -> generateGameGrid(height, width, mines, difficulty, cell.getRow(), cell.getCol()));
             }
     }
 
-    private void generateGameGrid(int height, int width, int mines,int y, int x) {
-        Gameboard gboard = Gameboard.generateGameboard(height,width,mines,y,x);
+    private void generateGameGrid(int height, int width, int mines, String difficulty, int y, int x) {
+        Gameboard gboard = Gameboard.generateGameboard(height,width,mines,difficulty,y,x);
         gameGridPane.getChildren().clear();
         timeLabel.setVisible(true);
         timer.start();
@@ -239,23 +247,15 @@ public class Controller implements Initializable  {
         int width = gboard.getWidth();
 
         if (cell.isMine()) {    // if cell contains a mine, then game over !
-            gameover(gboard);
+            gameOver(gboard,false);
             return;
         }
 
         showCell(gboard,row,col);   // show the cell
 
         if (check_win(gboard)) {    // check winning condition
-            timer.stop();
-            System.out.println("Malaka you won!! Your time was " + timeLabel.getText() + " seconds.");
-            msgLabel.setText("YOU WON!");
-            msgLabel.setLayoutX(width*18 - 28);
-            msgLabel.setVisible(true);
-            for (int i=0; i < gboard.getHeight(); i++) {
-                for (int j = 0; j < gboard.getWidth(); j++) {
-                    gboard.getMatrix()[i][j].setOpen(true);
-                }
-            }
+            gameOver(gboard,true);
+            return;
         }
 
         if (cell.getAdjMines() > 0) return;     // if cell has number in it, end function
@@ -348,16 +348,6 @@ public class Controller implements Initializable  {
         cell.setGraphic(tileV);
     }
 
-    private int countFlags(Gameboard gboard) {
-        int count=0;
-        int height = gboard.getHeight();
-        int width = gboard.getWidth();
-        for (int row=0; row < height; row++)
-            for (int col=0; col < width; col++)
-                if (gboard.getMatrix()[row][col].isFlag()) count++;
-        return count;
-    }
-
     private boolean check_win(Gameboard gboard) {
         int height = gboard.getHeight();
         int width = gboard.getWidth();
@@ -368,23 +358,90 @@ public class Controller implements Initializable  {
         return true;
     }
 
-    private void gameover(Gameboard gboard) {
+    private void gameOver(Gameboard gboard, boolean win) {
         timer.stop();
-        System.out.println("YOU CLICKED ON A MINE! GAME OVER CARALHO!");
         int height = gboard.getHeight();
         int width = gboard.getWidth();
-
-        msgLabel.setText("YOU LOST!");
-        msgLabel.setLayoutX(width*18 - 28);
-        msgLabel.setVisible(true);
-
-        for (int row = 0; row < height; row++) {
+        for (int row=0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 gboard.getMatrix()[row][col].setOpen(true);
                 if (gboard.getMatrix()[row][col].isMine())
                     showCell(gboard, row, col);
             }
         }
+
+        if (win) {
+            msgLabel.setText("YOU WON!");
+            int time = Integer.parseInt(timeLabel.getText());
+            System.out.println("Malaka you won!! Your time was " + time + " seconds.");
+            if (gboard.getDifficulty().equals("easy") && time<scores[0])
+                scores[0]=time;
+            else if (gboard.getDifficulty().equals("normal") && time<scores[1])
+                scores[1]=time;
+            else if (gboard.getDifficulty().equals("hard") && time<scores[2])
+                scores[2]=time;
+            saveScores();
+        }
+        else {
+            System.out.println("YOU CLICKED ON A MINE! GAME OVER CARALHO!");
+            msgLabel.setText("YOU LOST!");
+        }
+
+        msgLabel.setLayoutX(width*18 - 28);
+        msgLabel.setVisible(true);
+    }
+
+    private void saveScores() {
+        try (PrintWriter pw = new PrintWriter("scores.txt")) {
+            for (int i = 0; i < 3; i++)
+                pw.println(scores[i]);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void loadScores() throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(new File("scores.txt")))) {
+            int i=0;
+            String line = br.readLine();
+            while (line != null) {
+                scores[i] = Integer.parseInt(line);
+                i++;
+                line = br.readLine();
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("Scores file not found.");
+        }
+    }
+
+    @FXML
+    private void scoresWindow(ActionEvent actionEvent) {
+        Stage scores = new Stage();
+        scores.initModality(Modality.APPLICATION_MODAL);
+        scores.setTitle("Best Scores");
+        scores.initStyle(StageStyle.UTILITY);
+        Label easy = new Label("Easy: " + this.scores[0] + " seconds");
+        Label normal = new Label("Normal: " + this.scores[1] + " seconds");
+        Label hard = new Label("Hard: " + this.scores[2] + " seconds");
+        Button btn = new Button ("CLOSE");
+        btn.setOnAction(e->scores.close());
+        VBox layout = new VBox(5);
+        layout.getChildren().addAll(easy,normal,hard,btn);
+        layout.setAlignment(Pos.CENTER);
+        Scene scn = new Scene(layout,200,100);
+        scores.setResizable(false);
+        scores.setScene(scn);
+        scores.showAndWait();
+    }
+
+    private int countFlags(Gameboard gboard) {
+        int count=0;
+        int height = gboard.getHeight();
+        int width = gboard.getWidth();
+        for (int row=0; row < height; row++)
+            for (int col=0; col < width; col++)
+                if (gboard.getMatrix()[row][col].isFlag()) count++;
+        return count;
     }
 
     private void printGameBoard (Gameboard gboard, int height, int width) {
@@ -398,11 +455,18 @@ public class Controller implements Initializable  {
         }
     }
 
+    public void printBestScores () {
+        System.out.println("Easy: " + scores[0] + " seconds");
+        System.out.println("Normal: " + scores[1] + " seconds");
+        System.out.println("Hard: " + scores[2] + " seconds");
+    }
+
     public void handleQuit(ActionEvent actionEvent) {
         System.exit(0);
     }
 
-    public void aboutWindow(ActionEvent actionEvent) {
+    @FXML
+    private void aboutWindow(ActionEvent actionEvent) {
         Stage about = new Stage();
         about.initModality(Modality.APPLICATION_MODAL);
         about.setTitle("About Minesweeper");
@@ -429,7 +493,8 @@ public class Controller implements Initializable  {
         about.showAndWait();
     }
 
-    public void helpWindow(ActionEvent actionEvent) {
+    @FXML
+    private void helpWindow(ActionEvent actionEvent) {
         Stage help = new Stage();
         help.setTitle("Help");
         help.initStyle(StageStyle.UTILITY);
