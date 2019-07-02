@@ -18,3 +18,4 @@ Git repository : github.com/wiznick79/minesweeper/
 TODO List:
 - add questionmark so the player can mark the tiles he is not sure
 - add double click on numbers to reveal the closed tiles around it that are not flagged
+- add sounds

@@ -47,6 +47,7 @@ public class Controller implements Initializable  {
     public Button customGameButton;
     public GridPane gameGridPane;
     public AnchorPane mainAnchorPane;
+    public AnchorPane anchorPane;
     public VBox mainVBox;
     public Text title;
     public Label timeLabel;
@@ -262,12 +263,12 @@ public class Controller implements Initializable  {
         int height = gboard.getHeight();
         int width = gboard.getWidth();
 
+        showCell(gboard,row,col);   // show the cell
+
         if (cell.isMine()) {    // if cell contains a mine, then game over !
             gameOver(gboard,false);
             return;
         }
-
-        showCell(gboard,row,col);   // show the cell
 
         if (check_win(gboard)) {    // check winning condition
             gameOver(gboard,true);
