@@ -212,58 +212,61 @@ public class Controller implements Initializable  {
         newGameButton.setVisible(true);
         newGameButton.setLayoutX(width*18 - 28);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(height,width,mines,difficulty));
-        for (int row=0; row < height; row++)
-            for (int col=0; col < width; col++) {
-                Cell cell = new Cell(row,col,0,false,false,false);
-                gameGridPane.add(cell,col,row);
+        for (int row=0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                Cell cell = new Cell(row, col, 0, false, false, false);
+                gameGridPane.add(cell, col, row);
                 Image tile = new Image(getClass().getResourceAsStream("/images/tile.png"));
                 ImageView tileV = new ImageView(tile);
                 tileV.setFitHeight(35.0);
                 tileV.setFitWidth(35.0);
                 cell.setPadding(new Insets(0));
-                cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
+                cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
                 cell.setGraphic(tileV);
                 cell.setOnAction(e -> generateGameGrid(height, width, mines, difficulty, cell.getRow(), cell.getCol()));
             }
+        }
     }
 
     private void generateGameGrid(int height, int width, int mines, String difficulty, int y, int x) {
-        Gameboard gboard = Gameboard.generateGameboard(height,width,mines,difficulty,y,x);
+        Gameboard gboard = Gameboard.generateGameboard(height, width, mines, difficulty, y, x);
         gameGridPane.getChildren().clear();
         timeLabel.setVisible(true);
         timer.start();
-        for (int row=0; row < height; row++)
-            for (int col=0; col < width; col++) {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
                 Cell cell = gboard.getMatrix()[row][col];
-                gameGridPane.add(cell,col,row);
+                gameGridPane.add(cell, col, row);
                 Image tile = new Image(getClass().getResourceAsStream("/images/tile.png"));
                 ImageView tileV = new ImageView(tile);
                 tileV.setFitHeight(35.0);
                 tileV.setFitWidth(35.0);
                 cell.setPadding(new Insets(0));
-                cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
+                cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
                 cell.setGraphic(tileV);
                 cell.setOnMouseClicked(e -> {
                     if (e.getButton() == MouseButton.PRIMARY)
-                        checkCell(gboard, cell.getRow(), cell.getCol());
+                        checkCell(gboard, cell);
                     else if (e.getButton() == MouseButton.SECONDARY)
-                        flagCell(gboard, cell.getRow(), cell.getCol());
+                        flagCell(cell);
                 });
             }
-        checkCell(gboard,y,x);
+        }
+        checkCell(gboard,gboard.getMatrix()[y][x]);
         //printGameBoard(gboard,height,width); // for testing
     }
 
-    private void checkCell (Gameboard gboard, int row, int col) {
-        Cell cell = gboard.getMatrix()[row][col];
-
+    private void checkCell (Gameboard gboard, Cell cell) {
         if (cell.isOpen() || cell.isFlag()) return;     // if the cell is already opened or is flagged, nothing happens
+
+        int row = cell.getRow();
+        int col = cell.getCol();
 
         Cell[][] matrix = gboard.getMatrix();
         int height = gboard.getHeight();
         int width = gboard.getWidth();
 
-        showCell(gboard,row,col);   // show the cell
+        showCell(cell);   // show the cell
 
         if (cell.isMine()) {    // if cell contains a mine, then game over !
             gameOver(gboard,false);
@@ -278,41 +281,40 @@ public class Controller implements Initializable  {
         if (cell.getAdjMines() > 0) return;     // if cell has number in it, end function
         // if cell is empty, check it's adjacent cells, recursively
         if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()==0)
-            checkCell(gboard,row-1,col-1);
+            checkCell(gboard,matrix[row-1][col-1]);
         else if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()>0)
-            showCell(gboard,row-1,col-1);
+            showCell(matrix[row-1][col-1]);
         if (col>0 && matrix[row][col-1].getAdjMines()==0)
-            checkCell(gboard,row,col-1);
+            checkCell(gboard,matrix[row][col-1]);
         else if (col>0 && matrix[row][col-1].getAdjMines()>0)
-            showCell(gboard,row,col-1);
+            showCell(matrix[row][col-1]);
         if (col>0 && row<height-1 && matrix[row+1][col-1].getAdjMines()==0)
-            checkCell(gboard,row+1,col-1);
+            checkCell(gboard,matrix[row+1][col-1]);
         else if (row<height-1 && col>0 && matrix[row+1][col-1].getAdjMines()>0)
-            showCell(gboard,row+1,col-1);
+            showCell(matrix[row+1][col-1]);
         if (row>0 && matrix[row-1][col].getAdjMines()==0)
-            checkCell(gboard,row-1,col);
+            checkCell(gboard,matrix[row-1][col]);
         else if (row>0 && matrix[row-1][col].getAdjMines()>0)
-            showCell(gboard,row-1,col);
+            showCell(matrix[row-1][col]);
         if (row<height-1 && matrix[row+1][col].getAdjMines()==0)
-            checkCell(gboard,row+1,col);
+            checkCell(gboard,matrix[row+1][col]);
         else if (row<height-1 && matrix[row+1][col].getAdjMines()>0)
-            showCell(gboard,row+1,col);
+            showCell(matrix[row+1][col]);
         if (row>0 && col<width-1 && matrix[row-1][col+1].getAdjMines()==0)
-            checkCell(gboard,row-1,col+1);
+            checkCell(gboard,matrix[row-1][col+1]);
         else if (row>0 && col<width-1 && matrix[row-1][col+1].getAdjMines()>0)
-            showCell(gboard,row-1,col+1);
+            showCell(matrix[row-1][col+1]);
         if (col<width-1 && matrix[row][col+1].getAdjMines()==0)
-            checkCell(gboard,row,col+1);
+            checkCell(gboard,matrix[row][col+1]);
         else if (col<width-1 && matrix[row][col+1].getAdjMines()>0)
-           showCell(gboard,row,col+1);
+           showCell(matrix[row][col+1]);
         if (row<height-1 && col<width-1 && matrix[row+1][col+1].getAdjMines()==0)
-            checkCell(gboard,row+1,col+1);
+            checkCell(gboard,matrix[row+1][col+1]);
         else if (row<height-1 && col<width-1 && matrix[row+1][col+1].getAdjMines()>0)
-            showCell(gboard,row+1,col+1);
+            showCell(matrix[row+1][col+1]);
     }
 
-    private void showCell(Gameboard gboard, int row, int col) {
-        Cell cell = gboard.getMatrix()[row][col];
+    private void showCell(Cell cell) {
         Image tile = null;
         ImageView tileV;
         cell.setOpen(true);
@@ -343,8 +345,7 @@ public class Controller implements Initializable  {
         cell.setGraphic(tileV);
     }
 
-    private void flagCell(Gameboard gboard, int row, int col)  {
-        Cell cell = gboard.getMatrix()[row][col];
+    private void flagCell(Cell cell) {
         if (cell.isOpen()) return;
         Image tile;
         ImageView tileV;
@@ -383,7 +384,7 @@ public class Controller implements Initializable  {
             for (int col = 0; col < width; col++) {
                 gboard.getMatrix()[row][col].setOpen(true);
                 if (gboard.getMatrix()[row][col].isMine())
-                    showCell(gboard, row, col);
+                    showCell(gboard.getMatrix()[row][col]);
             }
         }
 
