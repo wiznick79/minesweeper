@@ -42,6 +42,7 @@
         <Label fx:id="timeLabel" layoutX="25.0" layoutY="25.0" visible="false" />
         <Label fx:id="mLabel" layoutY="5.0"  text="Mines" visible="false" />
         <Label fx:id="minesLabel" layoutY="25.0" visible="false" />
+        <Label fx:id="msgLabel" layoutY="5.0" visible="false" />
         <Button fx:id="newGameButton" layoutY="25.0" mnemonicParsing="false" text="New Game" visible="false" />
           <GridPane fx:id="gameGridPane" alignment="TOP_CENTER" layoutY="50.0" hgap="1.0" vgap="1.0">
                <padding>

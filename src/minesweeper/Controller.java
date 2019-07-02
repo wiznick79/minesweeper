@@ -45,6 +45,7 @@ public class Controller implements Initializable  {
     public Label tLabel;
     public Label mLabel;
     public Label minesLabel;
+    public Label msgLabel;
 
     private DoubleProperty time = new SimpleDoubleProperty();
 
@@ -83,6 +84,8 @@ public class Controller implements Initializable  {
         minesLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
         minesLabel.setTextFill(Color.RED);
 
+        msgLabel.setFont(Font.font("Arial", FontWeight.BOLD,14));
+        msgLabel.setTextFill(Color.BLUE);
     }
 
     private AnimationTimer timer = new AnimationTimer() {
@@ -133,6 +136,11 @@ public class Controller implements Initializable  {
     }
 
     public void customGame (ActionEvent actionEvent) {
+        tLabel.setVisible(false);
+        timeLabel.setVisible(false);
+        mLabel.setVisible(false);
+        minesLabel.setVisible(false);
+        msgLabel.setVisible(false);
         newGameButton.setVisible(false);
         labelHeight.setVisible(true);
         labelWidth.setVisible(true);
@@ -175,6 +183,7 @@ public class Controller implements Initializable  {
         minesLabel.setLayoutX(width*36-30);
         minesLabel.setVisible(true);
         minesLabel.setText(Integer.toString(mines));
+        msgLabel.setVisible(false);
         newGameButton.setVisible(true);
         newGameButton.setLayoutX(width*18 - 28);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(height,width,mines));
@@ -239,6 +248,9 @@ public class Controller implements Initializable  {
         if (check_win(gboard)) {    // check winning condition
             timer.stop();
             System.out.println("Malaka you won!! Your time was " + timeLabel.getText() + " seconds.");
+            msgLabel.setText("YOU WON!");
+            msgLabel.setLayoutX(width*18 - 28);
+            msgLabel.setVisible(true);
             for (int i=0; i < gboard.getHeight(); i++) {
                 for (int j = 0; j < gboard.getWidth(); j++) {
                     gboard.getMatrix()[i][j].setOpen(true);
@@ -361,6 +373,10 @@ public class Controller implements Initializable  {
         System.out.println("YOU CLICKED ON A MINE! GAME OVER CARALHO!");
         int height = gboard.getHeight();
         int width = gboard.getWidth();
+
+        msgLabel.setText("YOU LOST!");
+        msgLabel.setLayoutX(width*18 - 28);
+        msgLabel.setVisible(true);
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
