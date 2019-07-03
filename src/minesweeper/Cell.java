@@ -8,14 +8,16 @@ public class Cell extends Button {
     private int adjMines;
     private boolean mine;
     private boolean flag;
+    private boolean qmark;
     private boolean open;
 
-    public Cell(int row, int col, int adjMines, boolean mine, boolean flag, boolean open) {
+    public Cell(int row, int col, int adjMines, boolean mine, boolean flag, boolean qmark, boolean open) {
         this.setRow(row);
         this.setCol(col);
         this.setAdjMines(adjMines);
         this.setMine(mine);
         this.setFlag(flag);
+        this.setQmark(qmark);
         this.setOpen(open);
     }
 
@@ -54,4 +56,8 @@ public class Cell extends Button {
     public boolean isOpen() { return open; }
 
     public void setOpen(boolean open) { this.open = open; }
+
+    public boolean isQmark() { return qmark; }
+
+    public void setQmark(boolean qmark) { this.qmark = qmark; }
 }

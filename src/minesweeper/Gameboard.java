@@ -22,7 +22,7 @@ public class Gameboard {
         // initialize game metrix with empty cells
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                matrix[row][col] = new Cell(row,col,0,false,false,false);
+                matrix[row][col] = new Cell(row,col,0,false,false,false, false);
             }
         }
         // put mines randomly into the matrix
