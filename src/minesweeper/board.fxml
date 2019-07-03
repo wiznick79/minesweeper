@@ -32,7 +32,7 @@
         <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
       </Menu>
     </MenuBar>
-      <AnchorPane fx:id="anchorPane" prefHeight="343.0" prefWidth="420.0">
+      <AnchorPane fx:id="anchorPane" prefHeight="420.0" prefWidth="343.0">
         <Text fx:id="title" layoutX="55.0" layoutY="40.0" stroke="black" text="Welcome to Minesweeper" >
           <font> <Font name="Arial" size="20.0" /> </font>
         </Text>

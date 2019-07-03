@@ -124,29 +124,37 @@ public class Controller implements Initializable  {
         @Override
         public void handle (long timestamp) {
             long now = System.currentTimeMillis();
-            double t = (now - startTime) / 1000.0;
-            time.set(t);
+            time.set((now - startTime) / 1000.0);
         }
     };
 
-    public void easyGame(ActionEvent actionEvent) {
+    private double calcDecW () {
+        double dec;
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        stage.setWidth(359);
-        stage.setHeight(459);
+        Scene scene = mainAnchorPane.getScene();
+        dec = stage.getWidth() - scene.getWidth();
+        System.out.println("DecW: " + dec);
+        return dec;
+    }
+
+    private double calcDecH () {
+        double dec;
+        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
+        Scene scene = mainAnchorPane.getScene();
+        dec = stage.getHeight() - scene.getHeight();
+        System.out.println("DecH: " + dec);
+        return dec;
+    }
+
+    public void easyGame(ActionEvent actionEvent) {
         generateEmptyGameGrid(9,9,10,"easy");
     }
 
     public void normalGame(ActionEvent actionEvent) {
-        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        stage.setWidth(611);
-        stage.setHeight(711);
         generateEmptyGameGrid(16,16,40,"normal");
     }
 
     public void hardGame(ActionEvent actionEvent) {
-        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        stage.setWidth(935);
-        stage.setHeight(855);
         generateEmptyGameGrid(20,25,99,"hard");
     }
 
@@ -179,13 +187,13 @@ public class Controller implements Initializable  {
         else width = Integer.parseInt(boardWidth.getText());
         if (boardMines.getText().isEmpty()) mines=10;
         else mines = Integer.parseInt(boardMines.getText());
-        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        stage.setWidth(width*36+35);
-        stage.setHeight(height*36+135);
         generateEmptyGameGrid(height,width,mines,"custom");
     }
 
     private void generateEmptyGameGrid(int height, int width, int mines, String difficulty) {
+        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
+        stage.setWidth((36*width)+19+calcDecW());
+        stage.setHeight(36*height+96+calcDecH());
         title.setVisible(false);
         labelHeight.setVisible(false);
         labelWidth.setVisible(false);

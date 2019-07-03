@@ -15,6 +15,7 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icon.png")));
         primaryStage.setTitle("Minesweeper");
         primaryStage.setScene(new Scene(root, 343, 420));
+        primaryStage.sizeToScene();
         primaryStage.setResizable(false);
         primaryStage.show();
     }
