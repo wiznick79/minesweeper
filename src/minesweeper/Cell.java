@@ -21,17 +21,13 @@ public class Cell extends Button {
         this.setOpen(open);
     }
 
-    public int getAdjMines() {
-        return adjMines;
-    }
+    public int getAdjMines() { return adjMines; }
 
     public void setAdjMines(int adjMines) {
         this.adjMines = adjMines;
     }
 
-    public boolean isMine() {
-        return mine;
-    }
+    public boolean isMine() { return mine; }
 
     public void setMine(boolean mine) {
         this.mine = mine;
