@@ -1,6 +1,10 @@
 Minesweeper clone by Nikolaos Perris (nperris@gmail.com), (c) 2019
 Git repository : github.com/wiznick79/minesweeper/
 
+
+04/07/2019 v0.90
+- Winning condition bug fixed (I hope!)
+
 03/07/2019 v0.87
 - Added question mark system on 2nd right click (->flag->question mark->none)
 - Added double-click on open tiles to open its adjacent tiles, if there are equal flagged adjacent tiles.
@@ -19,9 +23,6 @@ Git repository : github.com/wiznick79/minesweeper/
 
 30/06/2019 v0.80
 - Working version with basic gameplay features implemented
-
-Known bugs:
-- Some times, winning condition does not work
 
 TODO List:
 - add sounds

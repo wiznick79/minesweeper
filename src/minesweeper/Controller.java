@@ -492,7 +492,7 @@ public class Controller implements Initializable  {
         Label normal = new Label("Normal: " + this.scores[1] + " seconds");
         Label hard = new Label("Hard: " + this.scores[2] + " seconds");
         Button btn = new Button ("CLOSE");
-        btn.setOnAction(e->scores.close());
+        btn.setOnAction(e -> scores.close());
         VBox layout = new VBox(5);
         layout.getChildren().addAll(easy,normal,hard,btn);
         layout.setAlignment(Pos.CENTER);
@@ -551,7 +551,7 @@ public class Controller implements Initializable  {
         Label l3 = new Label("Copyright (c) 2019");
         l3.setPadding(new Insets(0,0,5,0));
         Button btn = new Button ("CLOSE");
-        btn.setOnAction(e->about.close());
+        btn.setOnAction(e -> about.close());
         VBox layout = new VBox(3);
         layout.getChildren().addAll(l1,l2,email,l3,btn);
         layout.setAlignment(Pos.CENTER);
@@ -570,7 +570,7 @@ public class Controller implements Initializable  {
         l1.setWrapText(true);
         l1.setPadding(new Insets(10));
         Button btn = new Button ("CLOSE");
-        btn.setOnAction(e->help.close());
+        btn.setOnAction(e -> help.close());
         VBox layout = new VBox(3);
         layout.getChildren().addAll(l1,btn);
         layout.setAlignment(Pos.CENTER);
