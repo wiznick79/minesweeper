@@ -1,9 +1,5 @@
 package minesweeper;
 
-import java.io.*;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -18,11 +14,16 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -30,6 +31,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class Controller implements Initializable  {
 
@@ -58,6 +63,30 @@ public class Controller implements Initializable  {
 
     private DoubleProperty time = new SimpleDoubleProperty();
     private int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
+    private AnimationTimer timer = new AnimationTimer() {
+
+        BooleanProperty running = new SimpleBooleanProperty();
+        private long startTime;
+
+        @Override
+        public void start() {
+            startTime = System.currentTimeMillis();
+            running.set(true);
+            super.start();
+        }
+
+        @Override
+        public void stop() {
+            running.set(false);
+            super.stop();
+        }
+
+        @Override
+        public void handle (long timestamp) {
+            long now = System.currentTimeMillis();
+            time.set((now - startTime) / 1000.0);
+        }
+    };
 
     @Override
     public void initialize (URL location, ResourceBundle resources){
@@ -102,31 +131,6 @@ public class Controller implements Initializable  {
             ex.printStackTrace();
         }
     }
-
-    private AnimationTimer timer = new AnimationTimer() {
-
-        private long startTime;
-        BooleanProperty running = new SimpleBooleanProperty();
-
-        @Override
-        public void start() {
-            startTime = System.currentTimeMillis();
-            running.set(true);
-            super.start();
-        }
-
-        @Override
-        public void stop() {
-            running.set(false);
-            super.stop();
-        }
-
-        @Override
-        public void handle (long timestamp) {
-            long now = System.currentTimeMillis();
-            time.set((now - startTime) / 1000.0);
-        }
-    };
 
     private double calcDecW () {
         double dec;
