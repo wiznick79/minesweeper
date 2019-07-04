@@ -267,6 +267,7 @@ public class Controller implements Initializable  {
     }
 
     private void checkTile(Gameboard gboard, Tile tile) {
+
         if (tile.isOpen() || tile.isFlag()) return;     // if the tile is already opened or is flagged, nothing happens
 
         int row = tile.getRow();
@@ -284,12 +285,10 @@ public class Controller implements Initializable  {
             return;
         }
 
-        if (check_win(gboard)) {    // check winning condition
-            gameOver(gboard,true);
-            return;
+        if (tile.getAdjMines() > 0) {
+            if (check_win(gboard)) gameOver(gboard,true);  // check winning condition
+            return;     // if tile has number in it, end function
         }
-
-        if (tile.getAdjMines() > 0) return;     // if tile has number in it, end function
         // if tile is empty, check it's adjacent tiless, recursively
         if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()==0)
             checkTile(gboard,matrix[row-1][col-1]);
@@ -323,6 +322,8 @@ public class Controller implements Initializable  {
             checkTile(gboard,matrix[row+1][col+1]);
         else if (row<rows-1 && col<columns-1 && matrix[row+1][col+1].getAdjMines()>0)
             revealTile(gboard,matrix[row+1][col+1]);
+
+        if (check_win(gboard)) gameOver(gboard,true);    // check winning condition
     }
 
     private void revealTile(Gameboard gboard, Tile tile) {
@@ -409,28 +410,25 @@ public class Controller implements Initializable  {
     private boolean check_win(Gameboard gboard) {
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
-        int count = 0;
-
-        for (int row = 0; row < rows; row++)
-            for (int col = 0; col < columns; col++)
-                if (gboard.getMatrix()[row][col].isOpen())
-                    count++;
-
-        System.out.println("count: " + count);
-        return count == (rows*columns) - gboard.getMines();
-    }
-
-    /*
-    private boolean check_win(Gameboard gboard) {
-        int rows = gboard.getRows();
-        int columns = gboard.getColumns();
         for (int row = 0; row < rows; row++)
             for (int col = 0; col < columns; col++)
                 if (!gboard.getMatrix()[row][col].isOpen() && !gboard.getMatrix()[row][col].isMine())
                     return false;
         return true;
     }
-    */
+
+    /* Alternative function
+    private boolean check_win(Gameboard gboard) {
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        int count = 0;
+
+        for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
+                if (gboard.getMatrix()[row][col].isOpen())
+                    count++;
+        return count == (rows*columns) - gboard.getMines();
+    }*/
 
     private void gameOver(Gameboard gboard, boolean win) {
         timer.stop();

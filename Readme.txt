@@ -25,3 +25,4 @@ Known bugs:
 
 TODO List:
 - add sounds
+- add something fancier for win/loss?
