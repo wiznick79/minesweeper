@@ -40,11 +40,11 @@
         <Button fx:id="normalGameButton" layoutX="70.0" layoutY="110.0" prefWidth="200" text="Normal (16x16, 40 mines)" onAction="#normalGame" />
         <Button fx:id="hardGameButton" layoutX="70.0" layoutY="150.0" prefWidth="200" text="Hard (20x25, 99 mines)" onAction="#hardGame" />
         <Button fx:id="customGameButton" layoutX="70.0" layoutY="190.0" prefWidth="200" text="Create custom game" onAction="#customGame" />
-        <Label fx:id="labelHeight" layoutX="15.0" layoutY="5.0" text="Height:" visible="false" />
-        <Label fx:id="labelWidth" layoutX="85.0" layoutY="5.0" text="Width:" visible="false" />
+        <Label fx:id="labelRows" layoutX="15.0" layoutY="5.0" text="Rows:" visible="false" />
+        <Label fx:id="labelColumns" layoutX="85.0" layoutY="5.0" text="Columns:" visible="false" />
         <Label fx:id="labelMines" layoutX="155.0" layoutY="5.0" text="Mines:" visible="false" />
-        <TextField fx:id="boardHeight" layoutX="10.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
-        <TextField fx:id="boardWidth" layoutX="80.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
+        <TextField fx:id="boardRows" layoutX="10.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
+        <TextField fx:id="boardColumns" layoutX="80.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
         <TextField fx:id="boardMines" layoutX="150.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
         <Button fx:id="createButton" layoutX="220.0" layoutY="25.0" mnemonicParsing="false" onAction="#createCustomGame" text="Create board" visible="false" />
         <Label fx:id="tLabel" layoutX="25.0" layoutY="5.0" text="Time" visible="false" />

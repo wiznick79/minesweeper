@@ -3,52 +3,52 @@ package minesweeper;
 import java.util.Random;
 
 public class Gameboard {
-    private int height;
-    private int width;
+    private int rows;
+    private int columns;
     private int mines;
-    private Cell[][] matrix;
+    private Tile[][] matrix;
     private String difficulty;
 
-    private Gameboard(int height, int width, int mines, Cell[][] matrix, String difficulty) {
-        this.setHeight(height);
-        this.setWidth(width);
+    private Gameboard(int rows, int columns, int mines, Tile[][] matrix, String difficulty) {
+        this.setRows(rows);
+        this.setColumns(columns);
         this.setMines(mines);
         this.setMatrix(matrix);
         this.setDifficulty(difficulty);
     }
 
-    public static Gameboard generateGameboard(int height, int width, int mines, String difficulty, int y, int x) {
-        Cell[][] matrix = new Cell[height][width];
-        // initialize game metrix with empty cells
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                matrix[row][col] = new Cell(row,col,0,false,false,false, false);
+    public static Gameboard generateGameboard(int rows, int columns, int mines, String difficulty, int y, int x) {
+        Tile[][] matrix = new Tile[rows][columns];
+        // initialize game metrix with empty tiles
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                matrix[row][col] = new Tile(row,col,0,false,false,false, false);
             }
         }
         // put mines randomly into the matrix
         for (int i=0; i < mines; i++) {
-            int row = getRandomInt(height);
-            int col = getRandomInt(width);
+            int row = getRandomInt(rows);
+            int col = getRandomInt(columns);
             if (!matrix[row][col].isMine() && row!=y && row!=x)     // don't put mine on top of an existing one
                 matrix[row][col].setMine(true);                     // also exclude the opening tile (first tile the player clicked)
             else i--;
         }
-        // find the number of adjacent mines for each cell, checking all 8 directions (if possible)
-        for (int row=0; row < height ; row++) {
-            for (int col=0;  col < width; col++) {
+        // find the number of adjacent mines for each tile, checking all 8 directions (if possible)
+        for (int row=0; row < rows ; row++) {
+            for (int col=0;  col < columns; col++) {
                 if (!matrix[row][col].isMine()) {
                     if (row>0 && col>0 && matrix[row-1][col-1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
                     if (col>0 && matrix[row][col-1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
-                    if (row<height-1 && col>0 && matrix[row+1][col-1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
+                    if (row<rows-1 && col>0 && matrix[row+1][col-1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
                     if (row>0 && matrix[row-1][col].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
-                    if (row<height-1 && matrix[row+1][col].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
-                    if (row>0 && col<width-1 && matrix[row-1][col+1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
-                    if (col<width-1 && matrix[row][col+1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
-                    if (row<height-1 && col<width-1 && matrix[row+1][col+1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
+                    if (row<rows-1 && matrix[row+1][col].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
+                    if (row>0 && col<columns-1 && matrix[row-1][col+1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
+                    if (col<columns-1 && matrix[row][col+1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
+                    if (row<rows-1 && col<columns-1 && matrix[row+1][col+1].isMine()) matrix[row][col].setAdjMines(matrix[row][col].getAdjMines()+1);
                 }
             }
         }
-        return new Gameboard(height,width,mines,matrix,difficulty);
+        return new Gameboard(rows,columns,mines,matrix,difficulty);
     }
 
     private static int getRandomInt(int max) {
@@ -56,27 +56,27 @@ public class Gameboard {
         return random.nextInt(max);
     }
 
-    public int getWidth() {
-        return width;
+    public int getColumns() {
+        return columns;
     }
 
-    private void setWidth(int width) {
-        this.width = width;
+    private void setColumns(int columns) {
+        this.columns = columns;
     }
 
-    public int getHeight() {
-        return height;
+    public int getRows() {
+        return rows;
     }
 
-    private void setHeight(int height) {
-        this.height = height;
+    private void setRows(int rows) {
+        this.rows = rows;
     }
 
-    public Cell[][] getMatrix() {
+    public Tile[][] getMatrix() {
         return matrix;
     }
 
-    private void setMatrix(Cell[][] matrix) {
+    private void setMatrix(Tile[][] matrix) {
         this.matrix = matrix;
     }
 

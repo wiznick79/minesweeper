@@ -2,7 +2,7 @@ package minesweeper;
 
 import javafx.scene.control.Button;
 
-public class Cell extends Button {
+public class Tile extends Button {
     private int row;
     private int col;
     private int adjMines;
@@ -11,7 +11,7 @@ public class Cell extends Button {
     private boolean qmark;
     private boolean open;
 
-    public Cell(int row, int col, int adjMines, boolean mine, boolean flag, boolean qmark, boolean open) {
+    public Tile(int row, int col, int adjMines, boolean mine, boolean flag, boolean qmark, boolean open) {
         this.setRow(row);
         this.setCol(col);
         this.setAdjMines(adjMines);
@@ -33,9 +33,7 @@ public class Cell extends Button {
         this.mine = mine;
     }
 
-    public boolean isFlag() {
-        return flag;
-    }
+    public boolean isFlag() {return flag; }
 
     public void setFlag(boolean flag) {
         this.flag = flag;

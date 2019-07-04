@@ -22,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -34,11 +33,11 @@ import javafx.stage.StageStyle;
 
 public class Controller implements Initializable  {
 
-    public TextField boardHeight;
-    public TextField boardWidth;
+    public TextField boardRows;
+    public TextField boardColumns;
     public TextField boardMines;
-    public Label labelHeight;
-    public Label labelWidth;
+    public Label labelRows;
+    public Label labelColumns;
     public Label labelMines;
     public Button createButton;
     public Button newGameButton;
@@ -62,19 +61,19 @@ public class Controller implements Initializable  {
 
     @Override
     public void initialize (URL location, ResourceBundle resources){
-        boardHeight.textProperty().addListener(new ChangeListener<String>() {
+        boardRows.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
                 if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>30)
-                    boardHeight.setText(oldValue);
+                    boardRows.setText(oldValue);
             }
         });
 
-        boardWidth.textProperty().addListener(new ChangeListener<String>() {
+        boardColumns.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
                 if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>40)
-                    boardWidth.setText(oldValue);
+                    boardColumns.setText(oldValue);
             }
         });
 
@@ -134,7 +133,6 @@ public class Controller implements Initializable  {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         Scene scene = mainAnchorPane.getScene();
         dec = stage.getWidth() - scene.getWidth();
-        System.out.println("DecW: " + dec);
         return dec;
     }
 
@@ -143,7 +141,6 @@ public class Controller implements Initializable  {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         Scene scene = mainAnchorPane.getScene();
         dec = stage.getHeight() - scene.getHeight();
-        System.out.println("DecH: " + dec);
         return dec;
     }
 
@@ -171,36 +168,36 @@ public class Controller implements Initializable  {
         minesLabel.setVisible(false);
         msgLabel.setVisible(false);
         newGameButton.setVisible(false);
-        labelHeight.setVisible(true);
-        labelWidth.setVisible(true);
+        labelRows.setVisible(true);
+        labelColumns.setVisible(true);
         labelMines.setVisible(true);
-        boardHeight.setVisible(true);
-        boardWidth.setVisible(true);
+        boardRows.setVisible(true);
+        boardColumns.setVisible(true);
         boardMines.setVisible(true);
         createButton.setVisible(true);
     }
 
     public void createCustomGame(ActionEvent actionEvent) {
-        int height,width,mines;
-        if (boardHeight.getText().isEmpty()) height=9;
-        else height = Integer.parseInt(boardHeight.getText());
-        if (boardWidth.getText().isEmpty()) width=9;
-        else width = Integer.parseInt(boardWidth.getText());
+        int rows,columns,mines;
+        if (boardRows.getText().isEmpty()) rows=9;
+        else rows = Integer.parseInt(boardRows.getText());
+        if (boardColumns.getText().isEmpty()) columns=9;
+        else columns = Integer.parseInt(boardColumns.getText());
         if (boardMines.getText().isEmpty()) mines=10;
         else mines = Integer.parseInt(boardMines.getText());
-        generateEmptyGameGrid(height,width,mines,"custom");
+        generateEmptyGameGrid(rows,columns,mines,"custom");
     }
 
-    private void generateEmptyGameGrid(int height, int width, int mines, String difficulty) {
+    private void generateEmptyGameGrid(int rows, int columns, int mines, String difficulty) {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        stage.setWidth((36*width)+19+calcDecW());
-        stage.setHeight(36*height+96+calcDecH());
+        stage.setWidth((36*columns)+19+calcDecW());
+        stage.setHeight(36*rows+96+calcDecH());
         title.setVisible(false);
-        labelHeight.setVisible(false);
-        labelWidth.setVisible(false);
+        labelRows.setVisible(false);
+        labelColumns.setVisible(false);
         labelMines.setVisible(false);
-        boardHeight.setVisible(false);
-        boardWidth.setVisible(false);
+        boardRows.setVisible(false);
+        boardColumns.setVisible(false);
         boardMines.setVisible(false);
         easyGameButton.setVisible(false);
         normalGameButton.setVisible(false);
@@ -212,72 +209,73 @@ public class Controller implements Initializable  {
         timer.stop();
         time.setValue(0);
         timeLabel.setVisible(true);
-        mLabel.setLayoutX(width*36-40);
+        mLabel.setLayoutX(columns*36-40);
         mLabel.setVisible(true);
-        minesLabel.setLayoutX(width*36-30);
+        minesLabel.setLayoutX(columns*36-30);
         minesLabel.setVisible(true);
         minesLabel.setText(Integer.toString(mines));
         msgLabel.setVisible(false);
         newGameButton.setVisible(true);
-        newGameButton.setLayoutX(width*18 - 28);
-        newGameButton.setOnAction(e -> generateEmptyGameGrid(height,width,mines,difficulty));
-        for (int row=0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                Cell cell = new Cell(row, col, 0, false, false, false, false);
-                gameGridPane.add(cell, col, row);
-                Image tile = new Image(getClass().getResourceAsStream("/images/tile.png"));
-                ImageView tileV = new ImageView(tile);
-                tileV.setFitHeight(35.0);
-                tileV.setFitWidth(35.0);
-                cell.setPadding(new Insets(0));
-                cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
-                cell.setGraphic(tileV);
-                cell.setOnAction(e -> generateGameGrid(height, width, mines, difficulty, cell.getRow(), cell.getCol()));
+        newGameButton.setLayoutX(columns*18 - 28);
+        newGameButton.setOnAction(e -> generateEmptyGameGrid(rows,columns,mines,difficulty));
+        for (int row=0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Tile tile = new Tile(row, col, 0, false, false, false, false);
+                gameGridPane.add(tile, col, row);
+                Image tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
+                ImageView tileView = new ImageView(tileImage);
+                tileView.setFitHeight(35.0);
+                tileView.setFitWidth(35.0);
+                tile.setPadding(new Insets(0));
+                tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+                tile.setGraphic(tileView);
+                tile.setOnAction(e -> generateGameGrid(rows, columns, mines, difficulty, tile.getRow(), tile.getCol()));
             }
         }
     }
 
-    private void generateGameGrid(int height, int width, int mines, String difficulty, int y, int x) {
-        Gameboard gboard = Gameboard.generateGameboard(height, width, mines, difficulty, y, x);
+    private void generateGameGrid(int rows, int columns, int mines, String difficulty, int y, int x) {
+        Gameboard gboard = Gameboard.generateGameboard(rows, columns, mines, difficulty, y, x);
         gameGridPane.getChildren().clear();
         timeLabel.setVisible(true);
         timer.start();
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                Cell cell = gboard.getMatrix()[row][col];
-                gameGridPane.add(cell, col, row);
-                Image tile = new Image(getClass().getResourceAsStream("/images/tile.png"));
-                ImageView tileV = new ImageView(tile);
-                tileV.setFitHeight(35.0);
-                tileV.setFitWidth(35.0);
-                cell.setPadding(new Insets(0));
-                cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
-                cell.setGraphic(tileV);
-                cell.setOnMouseClicked(e -> {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Tile tile = gboard.getMatrix()[row][col];
+                gameGridPane.add(tile, col, row);
+                Image tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
+                ImageView tileView = new ImageView(tileImage);
+                tileView.setFitHeight(35.0);
+                tileView.setFitWidth(35.0);
+                tile.setPadding(new Insets(0));
+                tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+                tile.setGraphic(tileView);
+                tile.setOnMouseClicked(e -> {
                     if (e.getButton() == MouseButton.PRIMARY)
-                        checkCell(gboard, cell);
+                        checkTile(gboard, tile);
                     else if (e.getButton() == MouseButton.SECONDARY)
-                        flagCell(cell);
+                        flagTile(tile);
                 });
             }
         }
-        checkCell(gboard,gboard.getMatrix()[y][x]);
-        //printGameBoard(gboard,height,width); // for testing
+        checkTile(gboard,gboard.getMatrix()[y][x]);
+        //printGameBoard(gboard,rows,columns); // for testing
     }
 
-    private void checkCell (Gameboard gboard, Cell cell) {
-        if (cell.isOpen() || cell.isFlag()) return;     // if the cell is already opened or is flagged, nothing happens
+    private void checkTile(Gameboard gboard, Tile tile) {
+        if (tile.isOpen() || tile.isFlag()) return;     // if the tile is already opened or is flagged, nothing happens
 
-        int row = cell.getRow();
-        int col = cell.getCol();
+        int row = tile.getRow();
+        int col = tile.getCol();
 
-        Cell[][] matrix = gboard.getMatrix();
-        int height = gboard.getHeight();
-        int width = gboard.getWidth();
+        Tile[][] matrix = gboard.getMatrix();
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
 
-        showCell(gboard,cell);   // show the cell
+        tile.setOpen(true);
+        revealTile(gboard, tile);   // show the tile
 
-        if (cell.isMine()) {    // if cell contains a mine, then game over !
+        if (tile.isMine()) {    // if tile contains a mine, then game over !
             gameOver(gboard,false);
             return;
         }
@@ -287,142 +285,143 @@ public class Controller implements Initializable  {
             return;
         }
 
-        if (cell.getAdjMines() > 0) return;     // if cell has number in it, end function
-        // if cell is empty, check it's adjacent cells, recursively
+        if (tile.getAdjMines() > 0) return;     // if tile has number in it, end function
+        // if tile is empty, check it's adjacent tiless, recursively
         if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()==0)
-            checkCell(gboard,matrix[row-1][col-1]);
+            checkTile(gboard,matrix[row-1][col-1]);
         else if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()>0)
-            showCell(gboard,matrix[row-1][col-1]);
+            revealTile(gboard,matrix[row-1][col-1]);
         if (col>0 && matrix[row][col-1].getAdjMines()==0)
-            checkCell(gboard,matrix[row][col-1]);
+            checkTile(gboard,matrix[row][col-1]);
         else if (col>0 && matrix[row][col-1].getAdjMines()>0)
-            showCell(gboard,matrix[row][col-1]);
-        if (col>0 && row<height-1 && matrix[row+1][col-1].getAdjMines()==0)
-            checkCell(gboard,matrix[row+1][col-1]);
-        else if (row<height-1 && col>0 && matrix[row+1][col-1].getAdjMines()>0)
-            showCell(gboard,matrix[row+1][col-1]);
+            revealTile(gboard,matrix[row][col-1]);
+        if (col>0 && row<rows-1 && matrix[row+1][col-1].getAdjMines()==0)
+            checkTile(gboard,matrix[row+1][col-1]);
+        else if (row<rows-1 && col>0 && matrix[row+1][col-1].getAdjMines()>0)
+            revealTile(gboard,matrix[row+1][col-1]);
         if (row>0 && matrix[row-1][col].getAdjMines()==0)
-            checkCell(gboard,matrix[row-1][col]);
+            checkTile(gboard,matrix[row-1][col]);
         else if (row>0 && matrix[row-1][col].getAdjMines()>0)
-            showCell(gboard,matrix[row-1][col]);
-        if (row<height-1 && matrix[row+1][col].getAdjMines()==0)
-            checkCell(gboard,matrix[row+1][col]);
-        else if (row<height-1 && matrix[row+1][col].getAdjMines()>0)
-            showCell(gboard,matrix[row+1][col]);
-        if (row>0 && col<width-1 && matrix[row-1][col+1].getAdjMines()==0)
-            checkCell(gboard,matrix[row-1][col+1]);
-        else if (row>0 && col<width-1 && matrix[row-1][col+1].getAdjMines()>0)
-            showCell(gboard,matrix[row-1][col+1]);
-        if (col<width-1 && matrix[row][col+1].getAdjMines()==0)
-            checkCell(gboard,matrix[row][col+1]);
-        else if (col<width-1 && matrix[row][col+1].getAdjMines()>0)
-           showCell(gboard,matrix[row][col+1]);
-        if (row<height-1 && col<width-1 && matrix[row+1][col+1].getAdjMines()==0)
-            checkCell(gboard,matrix[row+1][col+1]);
-        else if (row<height-1 && col<width-1 && matrix[row+1][col+1].getAdjMines()>0)
-            showCell(gboard,matrix[row+1][col+1]);
+            revealTile(gboard,matrix[row-1][col]);
+        if (row<rows-1 && matrix[row+1][col].getAdjMines()==0)
+            checkTile(gboard,matrix[row+1][col]);
+        else if (row<rows-1 && matrix[row+1][col].getAdjMines()>0)
+            revealTile(gboard,matrix[row+1][col]);
+        if (row>0 && col<columns-1 && matrix[row-1][col+1].getAdjMines()==0)
+            checkTile(gboard,matrix[row-1][col+1]);
+        else if (row>0 && col<columns-1 && matrix[row-1][col+1].getAdjMines()>0)
+            revealTile(gboard,matrix[row-1][col+1]);
+        if (col<columns-1 && matrix[row][col+1].getAdjMines()==0)
+            checkTile(gboard,matrix[row][col+1]);
+        else if (col<columns-1 && matrix[row][col+1].getAdjMines()>0)
+           revealTile(gboard,matrix[row][col+1]);
+        if (row<rows-1 && col<columns-1 && matrix[row+1][col+1].getAdjMines()==0)
+            checkTile(gboard,matrix[row+1][col+1]);
+        else if (row<rows-1 && col<columns-1 && matrix[row+1][col+1].getAdjMines()>0)
+            revealTile(gboard,matrix[row+1][col+1]);
     }
 
-    private void showCell(Gameboard gboard, Cell cell) {
-        Image tile = null;
-        ImageView tileV;
-        cell.setOpen(true);
-        if (cell.isMine())
-            tile = new Image(getClass().getResourceAsStream("/images/mine.png"));
-        else if ((cell.getAdjMines()==1))
-            tile = new Image(getClass().getResourceAsStream("/images/1.png"));
-        else if ((cell.getAdjMines()==2))
-            tile = new Image(getClass().getResourceAsStream("/images/2.png"));
-        else if ((cell.getAdjMines()==3))
-            tile = new Image(getClass().getResourceAsStream("/images/3.png"));
-        else if ((cell.getAdjMines()==4))
-            tile = new Image(getClass().getResourceAsStream("/images/4.png"));
-        else if ((cell.getAdjMines()==5))
-            tile = new Image(getClass().getResourceAsStream("/images/5.png"));
-        else if ((cell.getAdjMines()==6))
-            tile = new Image(getClass().getResourceAsStream("/images/6.png"));
-        else if ((cell.getAdjMines()==7))
-            tile = new Image(getClass().getResourceAsStream("/images/7.png"));
-        else if ((cell.getAdjMines()==8))
-            tile = new Image(getClass().getResourceAsStream("/images/8.png"));
-        else if ((cell.getAdjMines()==0))
-            tile = new Image(getClass().getResourceAsStream("/images/opentile.png"));
-        cell.setOnMouseClicked(e -> {
+    private void revealTile(Gameboard gboard, Tile tile) {
+        Image tileImage = null;
+        ImageView tileView;
+        tile.setOpen(true);
+        if (tile.isMine())
+            tileImage = new Image(getClass().getResourceAsStream("/images/mine.png"));
+        else if ((tile.getAdjMines()==1))
+            tileImage = new Image(getClass().getResourceAsStream("/images/1.png"));
+        else if ((tile.getAdjMines()==2))
+            tileImage = new Image(getClass().getResourceAsStream("/images/2.png"));
+        else if ((tile.getAdjMines()==3))
+            tileImage = new Image(getClass().getResourceAsStream("/images/3.png"));
+        else if ((tile.getAdjMines()==4))
+            tileImage = new Image(getClass().getResourceAsStream("/images/4.png"));
+        else if ((tile.getAdjMines()==5))
+            tileImage = new Image(getClass().getResourceAsStream("/images/5.png"));
+        else if ((tile.getAdjMines()==6))
+            tileImage = new Image(getClass().getResourceAsStream("/images/6.png"));
+        else if ((tile.getAdjMines()==7))
+            tileImage = new Image(getClass().getResourceAsStream("/images/7.png"));
+        else if ((tile.getAdjMines()==8))
+            tileImage = new Image(getClass().getResourceAsStream("/images/8.png"));
+        else if ((tile.getAdjMines()==0))
+            tileImage = new Image(getClass().getResourceAsStream("/images/opentile.png"));
+        tile.setOnMouseClicked(e -> {
             if ((e.getButton()==MouseButton.PRIMARY) && (e.getClickCount() == 2))
-                openAdjacentTiles(gboard,cell);
+                openAdjacentTiles(gboard,tile);
         });
-        tileV = new ImageView(tile);
-        tileV.setFitHeight(35.0);
-        tileV.setFitWidth(35.0);
-        cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
-        cell.setGraphic(tileV);
+        tileView = new ImageView(tileImage);
+        tileView.setFitHeight(35.0);
+        tileView.setFitWidth(35.0);
+        tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
+        tile.setGraphic(tileView);
     }
 
-    private void openAdjacentTiles(Gameboard gboard, Cell cell) {
-        int row = cell.getRow();
-        int col = cell.getCol();
+    private void openAdjacentTiles(Gameboard gboard, Tile tile) {
+        int row = tile.getRow();
+        int col = tile.getCol();
         int count = 0;
         for (int y = -1; y < 2; y++) {
             for (int x = -1; x < 2; x++) {
-                if (row + y >= 0 && row + y < gboard.getWidth() && col + x >= 0 && col + x < gboard.getHeight() && gboard.getMatrix()[row + y][col + x].isFlag())
+                if (row + y >= 0 && row + y < gboard.getColumns() && col + x >= 0 && col + x < gboard.getRows() && gboard.getMatrix()[row + y][col + x].isFlag())
                     count++;
             }
         }
-        if (count == cell.getAdjMines()) {
+        if (count == tile.getAdjMines()) {
             for (int y = -1; y < 2; y++) {
                 for (int x = -1; x < 2; x++) {
-                    if (row + y >= 0 && row + y < gboard.getWidth() && col + x >= 0 && col + x < gboard.getHeight() && !gboard.getMatrix()[row + y][col + x].isOpen())
-                        checkCell(gboard, gboard.getMatrix()[row + y][col + x]);
+                    if (row + y >= 0 && row + y < gboard.getColumns() && col + x >= 0 && col + x < gboard.getRows() && !gboard.getMatrix()[row + y][col + x].isOpen())
+                        checkTile(gboard, gboard.getMatrix()[row + y][col + x]);
                 }
             }
         }
     }
 
-    private void flagCell(Cell cell) {
-        if (cell.isOpen()) return;
-        Image tile;
-        ImageView tileV;
-        if (!cell.isFlag() && !cell.isQmark()) {
-            tile = new Image(getClass().getResourceAsStream("/images/flag.png"));
-            cell.setFlag(true);
+    private void flagTile(Tile tile) {
+        if (tile.isOpen()) return;
+        Image tileImage;
+        ImageView tileView;
+        if (!tile.isFlag() && !tile.isQmark()) {
+            tileImage = new Image(getClass().getResourceAsStream("/images/flag.png"));
+            tile.setFlag(true);
             minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())-1));
         }
-        else if (cell.isFlag()){
-            tile = new Image(getClass().getResourceAsStream("/images/qmark.png"));
-            cell.setFlag(false);
-            cell.setQmark(true);
+        else if (tile.isFlag()){
+            tileImage = new Image(getClass().getResourceAsStream("/images/qmark.png"));
+            tile.setFlag(false);
+            tile.setQmark(true);
             minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())+1));
         }
         else {
-            tile = new Image(getClass().getResourceAsStream("/images/tile.png"));
-            cell.setQmark(false);
+            tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
+            tile.setQmark(false);
         }
-        tileV = new ImageView(tile);
-        tileV.setFitHeight(35.0);
-        tileV.setFitWidth(35.0);
-        cell.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
-        cell.setGraphic(tileV);
+        tileView = new ImageView(tileImage);
+        tileView.setFitHeight(35.0);
+        tileView.setFitWidth(35.0);
+        tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
+        tile.setGraphic(tileView);
     }
 
     private boolean check_win(Gameboard gboard) {
-        int height = gboard.getHeight();
-        int width = gboard.getWidth();
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
         int count = 0;
 
-        for (int row = 0; row < height; row++)
-            for (int col = 0; col < width; col++)
+        for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
                 if (gboard.getMatrix()[row][col].isOpen())
                     count++;
 
-        return count == (height*width) - gboard.getMines();
+        System.out.println("count: " + count);
+        return count == (rows*columns) - gboard.getMines();
     }
 
-    /* this function rarely was not detecting the win condition
+    /*
     private boolean check_win(Gameboard gboard) {
-        int height = gboard.getHeight();
-        int width = gboard.getWidth();
-        for (int row = 0; row < height; row++)
-            for (int col = 0; col < width; col++)
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
                 if (!gboard.getMatrix()[row][col].isOpen() && !gboard.getMatrix()[row][col].isMine())
                     return false;
         return true;
@@ -431,13 +430,13 @@ public class Controller implements Initializable  {
 
     private void gameOver(Gameboard gboard, boolean win) {
         timer.stop();
-        int height = gboard.getHeight();
-        int width = gboard.getWidth();
-        for (int row=0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row=0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
                 gboard.getMatrix()[row][col].setOpen(true);
                 if (gboard.getMatrix()[row][col].isMine())
-                    showCell(gboard, gboard.getMatrix()[row][col]);
+                    revealTile(gboard, gboard.getMatrix()[row][col]);
             }
         }
 
@@ -454,7 +453,7 @@ public class Controller implements Initializable  {
         }
         else msgLabel.setText("YOU LOST!");
 
-        msgLabel.setLayoutX(width*18 - 28);
+        msgLabel.setLayoutX(columns*18 - 28);
         msgLabel.setVisible(true);
     }
 
@@ -503,17 +502,17 @@ public class Controller implements Initializable  {
 
     private int countFlags(Gameboard gboard) {
         int count=0;
-        int height = gboard.getHeight();
-        int width = gboard.getWidth();
-        for (int row=0; row < height; row++)
-            for (int col=0; col < width; col++)
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row=0; row < rows; row++)
+            for (int col=0; col < columns; col++)
                 if (gboard.getMatrix()[row][col].isFlag()) count++;
         return count;
     }
 
-    private void printGameBoard (Gameboard gboard, int height, int width) {
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
+    private void printGameBoard (Gameboard gboard, int rows, int columns) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
                 if (gboard.getMatrix()[row][col].isMine())
                     System.out.print("| M ");
                 else System.out.print("| " + gboard.getMatrix()[row][col].getAdjMines() + " ");

@@ -6,7 +6,6 @@ Git repository : github.com/wiznick79/minesweeper/
 - Added double-click on open tiles to open its adjacent tiles, if there are equal flagged adjacent tiles.
   eg. if you double-click on a '2' and there are 2 flagged adjacent tiles, it will open the non-flagged adjacent tiles.
   If the flagged tiles are wrong you are going to lose!
-- Changed the check_win function cause some rare times the previous approach wouldn't work 
 - Minor fixes
 
 02/07/2019 v0.85
