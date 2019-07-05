@@ -483,12 +483,13 @@ public class Controller implements Initializable  {
         if (win) {
             msgLabel.setText("YOU WON!");
             gameover.setTitle("You won!");
-            l1.setText("You won!");
+            l1.setText("Congratulations! You won!");
             int score = Integer.parseInt(timeLabel.getText());
             if (gboard.getDifficulty().equals("easy") && score < scores[0]) {
                 highScore = true;
                 scores[0] = score;
-            } else if (gboard.getDifficulty().equals("normal") && score < scores[1]) {
+            }
+            else if (gboard.getDifficulty().equals("normal") && score < scores[1]) {
                 highScore = true;
                 scores[1] = score;
             }
@@ -497,7 +498,7 @@ public class Controller implements Initializable  {
                 scores[2] = score;
             }
             if (highScore) {
-                l2.setText("Congratulations! You got the fastest time in this difficulty!");
+                l2.setText("You got the fastest time in this difficulty!");
                 l3.setText("Your time was " + score + " seconds.");
                 saveScores();
             }
