@@ -23,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -444,21 +445,7 @@ public class Controller implements Initializable  {
                     revealTile(gboard, gboard.getMatrix()[row][col]);
             }
         }
-
-        if (win) {
-            msgLabel.setText("YOU WON!");
-            int score = Integer.parseInt(timeLabel.getText());
-            if (gboard.getDifficulty().equals("easy") && score<scores[0])
-                scores[0]=score;
-            else if (gboard.getDifficulty().equals("normal") && score<scores[1])
-                scores[1]=score;
-            else if (gboard.getDifficulty().equals("hard") && score<scores[2])
-                scores[2]=score;
-            saveScores();
-        }
-        else msgLabel.setText("YOU LOST!");
-
-        msgLabel.setVisible(true);
+        gameOverWindow(gboard,win);
     }
 
     private void saveScores() {
@@ -485,23 +472,81 @@ public class Controller implements Initializable  {
     }
 
     @FXML
+    private void gameOverWindow(Gameboard gboard, boolean win) {
+        boolean highScore = false;
+        Label l1 = new Label();
+        Label l2 = new Label();
+        Label l3 = new Label();
+        Stage gameover = new Stage();
+        gameover.initModality(Modality.APPLICATION_MODAL);
+        gameover.initStyle(StageStyle.UTILITY);
+        if (win) {
+            msgLabel.setText("YOU WON!");
+            gameover.setTitle("You won!");
+            l1.setText("You won!");
+            int score = Integer.parseInt(timeLabel.getText());
+            if (gboard.getDifficulty().equals("easy") && score < scores[0]) {
+                highScore = true;
+                scores[0] = score;
+            } else if (gboard.getDifficulty().equals("normal") && score < scores[1]) {
+                highScore = true;
+                scores[1] = score;
+            }
+            else if (gboard.getDifficulty().equals("hard") && score<scores[2]) {
+                highScore = true;
+                scores[2] = score;
+            }
+            if (highScore) {
+                l2.setText("Congratulations! You got the fastest time in this difficulty!");
+                l3.setText("Your time was " + score + " seconds.");
+                saveScores();
+            }
+        }
+        else {
+            msgLabel.setText("YOU LOST!");
+            gameover.setTitle("You lost!");
+            l1.setText("You lost!");
+        }
+        msgLabel.setVisible(true);
+        Button newGameBtn = new Button("New Game");
+        newGameBtn.setPrefWidth(100.0);
+        newGameBtn.setOnAction(e -> {
+            gameover.close();
+            generateEmptyGameGrid(gboard.getRows(), gboard.getColumns(), gboard.getMines(), gboard.getDifficulty());
+        });
+        Button closeBtn = new Button ("Close");
+        closeBtn.setPrefWidth(100.0);
+        closeBtn.setOnAction(e -> gameover.close());
+        VBox layout = new VBox(5);
+        HBox buttons = new HBox (20);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(newGameBtn,closeBtn);
+        layout.getChildren().addAll(l1,l2,l3,buttons);
+        layout.setAlignment(Pos.CENTER);
+        Scene scn = new Scene(layout,300,120);
+        gameover.setResizable(false);
+        gameover.setScene(scn);
+        gameover.showAndWait();
+    }
+
+    @FXML
     private void scoresWindow(ActionEvent actionEvent) {
-        Stage scores = new Stage();
-        scores.initModality(Modality.APPLICATION_MODAL);
-        scores.setTitle("Best Scores");
-        scores.initStyle(StageStyle.UTILITY);
+        Stage bestScores = new Stage();
+        bestScores.initModality(Modality.APPLICATION_MODAL);
+        bestScores.setTitle("Best Scores");
+        bestScores.initStyle(StageStyle.UTILITY);
         Label easy = new Label("Easy: " + this.scores[0] + " seconds");
         Label normal = new Label("Normal: " + this.scores[1] + " seconds");
         Label hard = new Label("Hard: " + this.scores[2] + " seconds");
         Button btn = new Button ("CLOSE");
-        btn.setOnAction(e -> scores.close());
+        btn.setOnAction(e -> bestScores.close());
         VBox layout = new VBox(5);
         layout.getChildren().addAll(easy,normal,hard,btn);
         layout.setAlignment(Pos.CENTER);
         Scene scn = new Scene(layout,200,100);
-        scores.setResizable(false);
-        scores.setScene(scn);
-        scores.showAndWait();
+        bestScores.setResizable(false);
+        bestScores.setScene(scn);
+        bestScores.showAndWait();
     }
 
     private int countFlags(Gameboard gboard) {
