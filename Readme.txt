@@ -2,6 +2,9 @@ Minesweeper clone by Nikolaos Perris (nperris@gmail.com), (c) 2019
 Git repository : github.com/wiznick79/minesweeper/
 
 
+05/07/2019 v0.91
+- Added a game over popup window
+
 04/07/2019 v0.90
 - Winning condition bug fixed (I hope!)
 
