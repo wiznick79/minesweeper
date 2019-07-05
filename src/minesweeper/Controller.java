@@ -194,8 +194,10 @@ public class Controller implements Initializable  {
 
     private void generateEmptyGameGrid(int rows, int columns, int mines, String difficulty) {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        stage.setWidth((36*columns)+19+calcDecW());
-        stage.setHeight(36*rows+96+calcDecH());
+        double decW = calcDecW();
+        double decH = calcDecH();
+        stage.setWidth((36*columns)+19+decW);
+        stage.setHeight(36*rows+96+decH);
         title.setVisible(false);
         labelRows.setVisible(false);
         labelColumns.setVisible(false);
@@ -218,9 +220,10 @@ public class Controller implements Initializable  {
         minesLabel.setLayoutX(columns*36-30);
         minesLabel.setVisible(true);
         minesLabel.setText(Integer.toString(mines));
+        msgLabel.setLayoutX(columns*18 - 44 + decW);
         msgLabel.setVisible(false);
         newGameButton.setVisible(true);
-        newGameButton.setLayoutX(columns*18 - 28);
+        newGameButton.setLayoutX(columns*18 - 44 + decW);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(rows,columns,mines,difficulty));
         for (int row=0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -455,7 +458,6 @@ public class Controller implements Initializable  {
         }
         else msgLabel.setText("YOU LOST!");
 
-        msgLabel.setLayoutX(columns*18 - 28);
         msgLabel.setVisible(true);
     }
 
@@ -555,7 +557,7 @@ public class Controller implements Initializable  {
         VBox layout = new VBox(3);
         layout.getChildren().addAll(l1,l2,email,l3,btn);
         layout.setAlignment(Pos.CENTER);
-        Scene scn = new Scene(layout,300,130);
+        Scene scn = new Scene(layout,310,130);
         about.setResizable(false);
         about.setScene(scn);
         about.showAndWait();
