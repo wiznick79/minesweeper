@@ -603,7 +603,7 @@ public class Controller implements Initializable  {
         VBox layout = new VBox(3);
         layout.getChildren().addAll(l1,l2,email,l3,btn);
         layout.setAlignment(Pos.CENTER);
-        Scene scn = new Scene(layout,310,130);
+        Scene scn = new Scene(layout,320,130);
         about.setResizable(false);
         about.setScene(scn);
         about.showAndWait();

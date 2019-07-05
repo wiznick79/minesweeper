@@ -29,4 +29,4 @@ Git repository : github.com/wiznick79/minesweeper/
 
 TODO List:
 - add sounds
-- add something fancier for win/loss?
+- add animations
