@@ -371,14 +371,14 @@ public class Controller implements Initializable  {
         int count = 0;
         for (int y = -1; y < 2; y++) {
             for (int x = -1; x < 2; x++) {
-                if (row + y >= 0 && row + y < gboard.getColumns() && col + x >= 0 && col + x < gboard.getRows() && gboard.getMatrix()[row + y][col + x].isFlag())
+                if (row + y >= 0 && row + y < gboard.getRows() && col + x >= 0 && col + x < gboard.getColumns() && gboard.getMatrix()[row + y][col + x].isFlag())
                     count++;
             }
         }
         if (count == tile.getAdjMines()) {
             for (int y = -1; y < 2; y++) {
                 for (int x = -1; x < 2; x++) {
-                    if (row + y >= 0 && row + y < gboard.getColumns() && col + x >= 0 && col + x < gboard.getRows() && !gboard.getMatrix()[row + y][col + x].isOpen())
+                    if (row + y >= 0 && row + y < gboard.getRows() && col + x >= 0 && col + x < gboard.getColumns() && !gboard.getMatrix()[row + y][col + x].isOpen())
                         checkTile(gboard, gboard.getMatrix()[row + y][col + x]);
                 }
             }
@@ -485,6 +485,7 @@ public class Controller implements Initializable  {
             gameover.setTitle("You won!");
             l1.setText("Congratulations! You won!");
             int score = Integer.parseInt(timeLabel.getText());
+            l2.setText("Your time was " + score + " seconds.");
             if (gboard.getDifficulty().equals("easy") && score < scores[0]) {
                 highScore = true;
                 scores[0] = score;
@@ -498,8 +499,7 @@ public class Controller implements Initializable  {
                 scores[2] = score;
             }
             if (highScore) {
-                l2.setText("You got the fastest time in this difficulty!");
-                l3.setText("Your time was " + score + " seconds.");
+                l3.setText("You got the fastest time in this difficulty!");
                 saveScores();
             }
         }
