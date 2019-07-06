@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -30,6 +31,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -62,6 +64,8 @@ public class Controller implements Initializable  {
     public Label minesLabel;
     public Label msgLabel;
 
+    private static Rectangle2D vBounds = Screen.getPrimary().getVisualBounds();
+    private static final double TILE_SIZE = vBounds.getHeight()>1000 ? 35.0 : 27.0 ;
     private DoubleProperty time = new SimpleDoubleProperty();
     private int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
     private AnimationTimer timer = new AnimationTimer() {
@@ -197,8 +201,8 @@ public class Controller implements Initializable  {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         double decW = calcDecW();
         double decH = calcDecH();
-        stage.setWidth((36*columns)+19+decW);
-        stage.setHeight(36*rows+96+decH);
+        stage.setWidth(((TILE_SIZE+1)*columns)+19+decW);
+        stage.setHeight((TILE_SIZE+1)*rows+96+decH);
         title.setVisible(false);
         labelRows.setVisible(false);
         labelColumns.setVisible(false);
@@ -216,15 +220,15 @@ public class Controller implements Initializable  {
         timer.stop();
         time.setValue(0);
         timeLabel.setVisible(true);
-        mLabel.setLayoutX(columns*36-40);
+        mLabel.setLayoutX(columns*(TILE_SIZE+1)-40);
         mLabel.setVisible(true);
-        minesLabel.setLayoutX(columns*36-30);
+        minesLabel.setLayoutX(columns*(TILE_SIZE+1)-30);
         minesLabel.setVisible(true);
         minesLabel.setText(Integer.toString(mines));
-        msgLabel.setLayoutX(columns*18 - 44 + decW);
+        msgLabel.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
         msgLabel.setVisible(false);
         newGameButton.setVisible(true);
-        newGameButton.setLayoutX(columns*18 - 44 + decW);
+        newGameButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(rows,columns,mines,difficulty));
         for (int row=0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -232,8 +236,8 @@ public class Controller implements Initializable  {
                 gameGridPane.add(tile, col, row);
                 Image tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
                 ImageView tileView = new ImageView(tileImage);
-                tileView.setFitHeight(35.0);
-                tileView.setFitWidth(35.0);
+                tileView.setFitHeight(TILE_SIZE);
+                tileView.setFitWidth(TILE_SIZE);
                 tile.setPadding(new Insets(0));
                 tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
                 tile.setGraphic(tileView);
@@ -252,8 +256,8 @@ public class Controller implements Initializable  {
                 gameGridPane.add(tile, col, row);
                 Image tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
                 ImageView tileView = new ImageView(tileImage);
-                tileView.setFitHeight(35.0);
-                tileView.setFitWidth(35.0);
+                tileView.setFitHeight(TILE_SIZE);
+                tileView.setFitWidth(TILE_SIZE);
                 tile.setPadding(new Insets(0));
                 tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
                 tile.setGraphic(tileView);
@@ -332,8 +336,8 @@ public class Controller implements Initializable  {
                 openAdjacentTiles(gboard,tile);
         });
         tileView = new ImageView(tileImage);
-        tileView.setFitHeight(35.0);
-        tileView.setFitWidth(35.0);
+        tileView.setFitHeight(TILE_SIZE);
+        tileView.setFitWidth(TILE_SIZE);
         tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
         tile.setGraphic(tileView);
     }
@@ -378,8 +382,8 @@ public class Controller implements Initializable  {
             tile.setQmark(false);
         }
         tileView = new ImageView(tileImage);
-        tileView.setFitHeight(35.0);
-        tileView.setFitWidth(35.0);
+        tileView.setFitHeight(TILE_SIZE);
+        tileView.setFitWidth(TILE_SIZE);
         tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
         tile.setGraphic(tileView);
     }
