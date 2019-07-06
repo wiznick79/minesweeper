@@ -517,59 +517,44 @@ public class Controller implements Initializable  {
     @FXML
     private void scoresWindow(ActionEvent actionEvent) {
         Stage bestScores = new Stage();
-        double width = 200.0;
-        double height = 100.0;
+        double width = 240.0;
+        double height = 110.0;
         bestScores.initModality(Modality.APPLICATION_MODAL);
         bestScores.setTitle("Best Scores");
         bestScores.initStyle(StageStyle.UTILITY);
-        Label easy = new Label("Easy: " + this.scores[0] + " seconds");
-        Label normal = new Label("Normal: " + this.scores[1] + " seconds");
-        Label hard = new Label("Hard: " + this.scores[2] + " seconds");
-        Button btn = new Button ("CLOSE");
-        btn.setOnAction(e -> bestScores.close());
+        Label easy = new Label("Easy: " + scores[0] + " seconds");
+        Label normal = new Label("Normal: " + scores[1] + " seconds");
+        Label hard = new Label("Hard: " + scores[2] + " seconds");
+        Button resetBtn = new Button("Reset Scores");
+        resetBtn.setPrefWidth(100.0);
+        resetBtn.setOnAction(e -> {
+            scores[0] = 9999;
+            easy.setText("Easy: " + scores[0] + " seconds");
+            scores[1] = 9999;
+            normal.setText("Normal: " + scores[1] + " seconds");
+            scores[2] = 9999;
+            hard.setText("Hard: " + scores[2] + " seconds");
+            saveScores();
+        });
+        Button closeBtn = new Button ("Close");
+        closeBtn.setPrefWidth(100.0);
+        closeBtn.setOnAction(e -> bestScores.close());
         VBox layout = new VBox(5);
-        layout.getChildren().addAll(easy,normal,hard,btn);
+        HBox buttons = new HBox (20);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(resetBtn,closeBtn);
+        layout.getChildren().addAll(easy,normal,hard,buttons);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
         bestScores.setResizable(false);
         bestScores.setScene(scene);
+        closeBtn.requestFocus();
         Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
         double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
         double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
         bestScores.setX(xPos - width/2 - calcDecW()/2);
         bestScores.setY(yPos - height/2 - calcDecH()/2);
         bestScores.showAndWait();
-    }
-
-    private int countFlags(Gameboard gboard) {
-        int count=0;
-        int rows = gboard.getRows();
-        int columns = gboard.getColumns();
-        for (int row=0; row < rows; row++)
-            for (int col=0; col < columns; col++)
-                if (gboard.getMatrix()[row][col].isFlag()) count++;
-        return count;
-    }
-
-    private void printGameBoard (Gameboard gboard, int rows, int columns) {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                if (gboard.getMatrix()[row][col].isMine())
-                    System.out.print("| M ");
-                else System.out.print("| " + gboard.getMatrix()[row][col].getAdjMines() + " ");
-            }
-            System.out.println("|");
-        }
-    }
-
-    public void printBestScores () {
-        System.out.println("Easy: " + scores[0] + " seconds");
-        System.out.println("Normal: " + scores[1] + " seconds");
-        System.out.println("Hard: " + scores[2] + " seconds");
-    }
-
-    public void handleQuit(ActionEvent actionEvent) {
-        System.exit(0);
     }
 
     @FXML
@@ -591,10 +576,11 @@ public class Controller implements Initializable  {
         email.setOnAction(e -> a.getHostServices().showDocument("mailto:"+email.getText()));
         Label l3 = new Label("Copyright (c) 2019");
         l3.setPadding(new Insets(0,0,5,0));
-        Button btn = new Button ("CLOSE");
-        btn.setOnAction(e -> about.close());
+        Button closeBtn = new Button ("Close");
+        closeBtn.setPrefWidth(100.0);
+        closeBtn.setOnAction(e -> about.close());
         VBox layout = new VBox(3);
-        layout.getChildren().addAll(l1,l2,email,l3,btn);
+        layout.getChildren().addAll(l1,l2,email,l3,closeBtn);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
         about.setResizable(false);
@@ -618,10 +604,11 @@ public class Controller implements Initializable  {
         Label l1 = new Label("This Minesweeper clone plays just like the classic Windows Minesweeper. Choose a difficulty level or make your own custom game and have fun!");
         l1.setWrapText(true);
         l1.setPadding(new Insets(10));
-        Button btn = new Button ("CLOSE");
-        btn.setOnAction(e -> help.close());
+        Button closeBtn = new Button ("Close");
+        closeBtn.setPrefWidth(100.0);
+        closeBtn.setOnAction(e -> help.close());
         VBox layout = new VBox(3);
-        layout.getChildren().addAll(l1,btn);
+        layout.getChildren().addAll(l1,closeBtn);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
         help.setScene(scene);
@@ -631,5 +618,30 @@ public class Controller implements Initializable  {
         help.setX(xPos - width/2 - calcDecW()/2);
         help.setY(yPos - height/2 - calcDecH()/2);
         help.showAndWait();
+    }
+
+    public void handleQuit(ActionEvent actionEvent) {
+        System.exit(0);
+    }
+
+    private int countFlags(Gameboard gboard) {
+        int count=0;
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row=0; row < rows; row++)
+            for (int col=0; col < columns; col++)
+                if (gboard.getMatrix()[row][col].isFlag()) count++;
+        return count;
+    }
+
+    private void printGameBoard (Gameboard gboard, int rows, int columns) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if (gboard.getMatrix()[row][col].isMine())
+                    System.out.print("| M ");
+                else System.out.print("| " + gboard.getMatrix()[row][col].getAdjMines() + " ");
+            }
+            System.out.println("|");
+        }
     }
 }
