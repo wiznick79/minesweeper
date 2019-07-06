@@ -33,7 +33,7 @@
       </Menu>
     </MenuBar>
       <AnchorPane fx:id="anchorPane" prefHeight="420.0" prefWidth="343.0">
-        <Text fx:id="title" layoutX="55.0" layoutY="40.0" stroke="black" text="Welcome to Minesweeper" >
+        <Text fx:id="title" layoutX="55.0" layoutY="40.0" stroke="black" text="Welcome to MineZweeper" >
           <font> <Font name="Arial" size="20.0" /> </font>
         </Text>
         <Button fx:id="easyGameButton" layoutX="70.0" layoutY="70.0" prefWidth="200" text="Easy (9x9, 10 mines)" onAction="#easyGame" />

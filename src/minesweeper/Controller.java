@@ -561,11 +561,11 @@ public class Controller implements Initializable  {
     private void aboutWindow(ActionEvent actionEvent) {
         Stage about = new Stage();
         double width = 320.0;
-        double height = 130.0;
+        double height = 120.0;
         about.initModality(Modality.APPLICATION_MODAL);
-        about.setTitle("About Minesweeper");
+        about.setTitle("About MineZweeper");
         about.initStyle(StageStyle.UTILITY);
-        Label l1 = new Label("A Minesweeper clone made in Java and JavaFX");
+        Label l1 = new Label("A Minesweeper clone made in JavaFX");
         Label l2 = new Label("by Nikolaos Perris");
         Hyperlink email = new Hyperlink("nperris@gmail.com");
         email.setStyle("-fx-border-style: hidden;");
