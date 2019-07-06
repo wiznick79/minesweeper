@@ -425,29 +425,6 @@ public class Controller implements Initializable  {
         gameOverWindow(gboard,win);
     }
 
-    private void saveScores() {
-        try (PrintWriter pw = new PrintWriter("scores.txt")) {
-            for (int i = 0; i < 3; i++)
-                pw.println(scores[i]);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void loadScores() throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(new File("scores.txt")))) {
-            int i=0;
-            String line = br.readLine();
-            while (line != null) {
-                scores[i] = Integer.parseInt(line);
-                i++;
-                line = br.readLine();
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println("Scores file not found.");
-        }
-    }
-
     @FXML
     private void gameOverWindow(Gameboard gboard, boolean win) {
         boolean highScore = false;
@@ -512,6 +489,29 @@ public class Controller implements Initializable  {
         gameover.setX(xPos - width/2 - calcDecW()/2);
         gameover.setY(yPos - height/2 - calcDecH()/2);
         gameover.showAndWait();
+    }
+
+    private void saveScores() {
+        try (PrintWriter pw = new PrintWriter("scores.txt")) {
+            for (int i = 0; i < 3; i++)
+                pw.println(scores[i]);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void loadScores() throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(new File("scores.txt")))) {
+            int i=0;
+            String line = br.readLine();
+            while (line != null) {
+                scores[i] = Integer.parseInt(line);
+                i++;
+                line = br.readLine();
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("Scores file not found.");
+        }
     }
 
     @FXML
