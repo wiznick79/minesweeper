@@ -2,6 +2,9 @@ Minesweeper clone by Nikolaos Perris (nperris@gmail.com), (c) 2019
 Git repository : github.com/wiznick79/minesweeper/
 
 
+06/07/2019 v0.92
+- Minor improvements
+
 05/07/2019 v0.91
 - Added a game over popup window
 
