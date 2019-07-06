@@ -273,13 +273,6 @@ public class Controller implements Initializable  {
 
         if (tile.isOpen() || tile.isFlag()) return;     // if the tile is already opened or is flagged, nothing happens
 
-        int row = tile.getRow();
-        int col = tile.getCol();
-
-        Tile[][] matrix = gboard.getMatrix();
-        int rows = gboard.getRows();
-        int columns = gboard.getColumns();
-
         revealTile(gboard, tile);   // show the tile
 
         if (tile.isMine()) {    // if tile contains a mine, then game over !
@@ -291,6 +284,12 @@ public class Controller implements Initializable  {
             if (check_win(gboard)) gameOver(gboard,true);  // check winning condition
             return;     // if tile has number in it, end function
         }
+
+        int row = tile.getRow();
+        int col = tile.getCol();
+        Tile[][] matrix = gboard.getMatrix();
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
 
         // if tile is empty, check its adjacent tiles, recursively
         for (int y = -1; y < 2; y++) {
@@ -327,6 +326,7 @@ public class Controller implements Initializable  {
             tileImage = new Image(getClass().getResourceAsStream("/images/8.png"));
         else if ((tile.getAdjMines()==0))
             tileImage = new Image(getClass().getResourceAsStream("/images/opentile.png"));
+        // enable the double-click to open adjacent tiles for the revealed tile
         tile.setOnMouseClicked(e -> {
             if ((e.getButton()==MouseButton.PRIMARY) && (e.getClickCount() == 2))
                 openAdjacentTiles(gboard,tile);
