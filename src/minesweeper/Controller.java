@@ -285,7 +285,7 @@ public class Controller implements Initializable  {
         }
 
         if (tile.getAdjMines() > 0) {
-            if (check_win(gboard)) gameOver(gboard,true);  // check winning condition
+            if (checkWin(gboard)) gameOver(gboard,true);  // check winning condition
             return;     // if tile has number in it, end function
         }
 
@@ -303,7 +303,7 @@ public class Controller implements Initializable  {
             }
         }
 
-        if (check_win(gboard)) gameOver(gboard,true);    // check winning condition
+        if (checkWin(gboard)) gameOver(gboard,true);    // check winning condition
     }
 
     private void revealTile(Gameboard gboard, Tile tile) {
@@ -355,8 +355,9 @@ public class Controller implements Initializable  {
         if (count == tile.getAdjMines()) {
             for (int y = -1; y < 2; y++) {
                 for (int x = -1; x < 2; x++) {
-                    if (row+y >= 0 && row+y < gboard.getRows() && col+x >= 0 && col+x < gboard.getColumns() && !gboard.getMatrix()[row+y][col+x].isOpen())
-                        checkTile(gboard, gboard.getMatrix()[row+y][col+x]);
+                    if (row+y >= 0 && row+y < gboard.getRows() && col+x >= 0 && col+x < gboard.getColumns() && !gboard.getMatrix()[row+y][col+x].isOpen()) {
+                        checkTile(gboard, gboard.getMatrix()[row + y][col + x]);
+                    }
                 }
             }
         }
@@ -388,7 +389,7 @@ public class Controller implements Initializable  {
         tile.setGraphic(tileView);
     }
 
-    private boolean check_win(Gameboard gboard) {
+    private boolean checkWin(Gameboard gboard) {
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
         for (int row = 0; row < rows; row++)
@@ -399,7 +400,7 @@ public class Controller implements Initializable  {
     }
 
     /* Alternative function
-    private boolean check_win(Gameboard gboard) {
+    private boolean checkWin(Gameboard gboard) {
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
         int count = 0;
@@ -428,6 +429,7 @@ public class Controller implements Initializable  {
     @FXML
     private void gameOverWindow(Gameboard gboard, boolean win) {
         boolean highScore = false;
+        int bestScore = 9999;
         Label l1 = new Label();
         Label l2 = new Label();
         Label l3 = new Label();
@@ -455,8 +457,11 @@ public class Controller implements Initializable  {
                 scores[2] = score;
             }
             if (highScore) {
-                l3.setText("You got the fastest time in this difficulty!");
+                l3.setText("You have the fastest time for this difficulty!");
                 saveScores();
+            }
+            else {
+                l3.setText("Best time: " + bestScore);
             }
         }
         else {
@@ -467,13 +472,13 @@ public class Controller implements Initializable  {
         msgLabel.setVisible(true);
         Button newGameBtn = new Button("New Game");
         newGameBtn.setPrefWidth(100.0);
-        newGameBtn.setOnAction(e -> {
+        newGameBtn.setOnMouseClicked(e -> {
             gameover.close();
             generateEmptyGameGrid(gboard.getRows(), gboard.getColumns(), gboard.getMines(), gboard.getDifficulty());
         });
         Button closeBtn = new Button ("Close");
         closeBtn.setPrefWidth(100.0);
-        closeBtn.setOnAction(e -> gameover.close());
+        closeBtn.setOnMouseClicked(e -> gameover.close());
         VBox layout = new VBox(5);
         HBox buttons = new HBox (20);
         buttons.setAlignment(Pos.CENTER);
@@ -563,7 +568,7 @@ public class Controller implements Initializable  {
         double width = 320.0;
         double height = 120.0;
         about.initModality(Modality.APPLICATION_MODAL);
-        about.setTitle("About Minezweeper");
+        about.setTitle("About Minesweeper");
         about.initStyle(StageStyle.UTILITY);
         Label l1 = new Label("A Minesweeper clone made in JavaFX");
         Label l2 = new Label("by Nikolaos Perris");
