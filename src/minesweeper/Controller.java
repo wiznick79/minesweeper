@@ -65,7 +65,7 @@ public class Controller implements Initializable  {
     public Label msgLabel;
 
     private static Rectangle2D vBounds = Screen.getPrimary().getVisualBounds();
-    private static final double TILE_SIZE = vBounds.getHeight()>1000 ? 35.0 : 27.0 ;
+    private static final double TILE_SIZE = vBounds.getHeight()>1000 ? 35.0 : 27.0;
     private DoubleProperty time = new SimpleDoubleProperty();
     private int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
     private AnimationTimer timer = new AnimationTimer() {
@@ -369,13 +369,13 @@ public class Controller implements Initializable  {
         if (!tile.isFlag() && !tile.isQmark()) {
             tileImage = new Image(getClass().getResourceAsStream("/images/flag.png"));
             tile.setFlag(true);
-            minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())-1));
+            minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())-1)); // decrease mines counter
         }
         else if (tile.isFlag()){
             tileImage = new Image(getClass().getResourceAsStream("/images/qmark.png"));
             tile.setFlag(false);
             tile.setQmark(true);
-            minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())+1));
+            minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())+1)); // increase mines counter
         }
         else {
             tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
