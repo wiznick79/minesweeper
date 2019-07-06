@@ -246,7 +246,6 @@ public class Controller implements Initializable  {
         Gameboard gboard = Gameboard.generateGameboard(rows, columns, mines, difficulty, y, x);
         gameGridPane.getChildren().clear();
         timeLabel.setVisible(true);
-        timer.start();
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 Tile tile = gboard.getMatrix()[row][col];
@@ -266,8 +265,8 @@ public class Controller implements Initializable  {
                 });
             }
         }
+        timer.start();
         checkTile(gboard,gboard.getMatrix()[y][x]);
-        //printGameBoard(gboard,rows,columns); // for testing
     }
 
     private void checkTile(Gameboard gboard, Tile tile) {
@@ -281,7 +280,6 @@ public class Controller implements Initializable  {
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
 
-        tile.setOpen(true);
         revealTile(gboard, tile);   // show the tile
 
         if (tile.isMine()) {    // if tile contains a mine, then game over !
@@ -293,39 +291,14 @@ public class Controller implements Initializable  {
             if (check_win(gboard)) gameOver(gboard,true);  // check winning condition
             return;     // if tile has number in it, end function
         }
-        // if tile is empty, check it's adjacent tiless, recursively
-        if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()==0)
-            checkTile(gboard,matrix[row-1][col-1]);
-        else if (row>0 && col>0 && matrix[row-1][col-1].getAdjMines()>0)
-            revealTile(gboard,matrix[row-1][col-1]);
-        if (col>0 && matrix[row][col-1].getAdjMines()==0)
-            checkTile(gboard,matrix[row][col-1]);
-        else if (col>0 && matrix[row][col-1].getAdjMines()>0)
-            revealTile(gboard,matrix[row][col-1]);
-        if (col>0 && row<rows-1 && matrix[row+1][col-1].getAdjMines()==0)
-            checkTile(gboard,matrix[row+1][col-1]);
-        else if (row<rows-1 && col>0 && matrix[row+1][col-1].getAdjMines()>0)
-            revealTile(gboard,matrix[row+1][col-1]);
-        if (row>0 && matrix[row-1][col].getAdjMines()==0)
-            checkTile(gboard,matrix[row-1][col]);
-        else if (row>0 && matrix[row-1][col].getAdjMines()>0)
-            revealTile(gboard,matrix[row-1][col]);
-        if (row<rows-1 && matrix[row+1][col].getAdjMines()==0)
-            checkTile(gboard,matrix[row+1][col]);
-        else if (row<rows-1 && matrix[row+1][col].getAdjMines()>0)
-            revealTile(gboard,matrix[row+1][col]);
-        if (row>0 && col<columns-1 && matrix[row-1][col+1].getAdjMines()==0)
-            checkTile(gboard,matrix[row-1][col+1]);
-        else if (row>0 && col<columns-1 && matrix[row-1][col+1].getAdjMines()>0)
-            revealTile(gboard,matrix[row-1][col+1]);
-        if (col<columns-1 && matrix[row][col+1].getAdjMines()==0)
-            checkTile(gboard,matrix[row][col+1]);
-        else if (col<columns-1 && matrix[row][col+1].getAdjMines()>0)
-           revealTile(gboard,matrix[row][col+1]);
-        if (row<rows-1 && col<columns-1 && matrix[row+1][col+1].getAdjMines()==0)
-            checkTile(gboard,matrix[row+1][col+1]);
-        else if (row<rows-1 && col<columns-1 && matrix[row+1][col+1].getAdjMines()>0)
-            revealTile(gboard,matrix[row+1][col+1]);
+
+        // if tile is empty, check its adjacent tiles, recursively
+        for (int y = -1; y < 2; y++) {
+            for (int x = -1; x < 2; x++) {
+                if (row+y >= 0 && row+y < rows && col+x >= 0 && col+x < columns && !matrix[row+y][col+x].isMine())
+                    checkTile(gboard, matrix[row+y][col+x]);
+            }
+        }
 
         if (check_win(gboard)) gameOver(gboard,true);    // check winning condition
     }
@@ -371,15 +344,15 @@ public class Controller implements Initializable  {
         int count = 0;
         for (int y = -1; y < 2; y++) {
             for (int x = -1; x < 2; x++) {
-                if (row + y >= 0 && row + y < gboard.getRows() && col + x >= 0 && col + x < gboard.getColumns() && gboard.getMatrix()[row + y][col + x].isFlag())
+                if (row+y >= 0 && row+y < gboard.getRows() && col+x >= 0 && col+x < gboard.getColumns() && gboard.getMatrix()[row+y][col+x].isFlag())
                     count++;
             }
         }
         if (count == tile.getAdjMines()) {
             for (int y = -1; y < 2; y++) {
                 for (int x = -1; x < 2; x++) {
-                    if (row + y >= 0 && row + y < gboard.getRows() && col + x >= 0 && col + x < gboard.getColumns() && !gboard.getMatrix()[row + y][col + x].isOpen())
-                        checkTile(gboard, gboard.getMatrix()[row + y][col + x]);
+                    if (row+y >= 0 && row+y < gboard.getRows() && col+x >= 0 && col+x < gboard.getColumns() && !gboard.getMatrix()[row+y][col+x].isOpen())
+                        checkTile(gboard, gboard.getMatrix()[row+y][col+x]);
                 }
             }
         }
