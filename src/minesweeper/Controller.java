@@ -563,7 +563,7 @@ public class Controller implements Initializable  {
         double width = 320.0;
         double height = 120.0;
         about.initModality(Modality.APPLICATION_MODAL);
-        about.setTitle("About MineZweeper");
+        about.setTitle("About Minezweeper");
         about.initStyle(StageStyle.UTILITY);
         Label l1 = new Label("A Minesweeper clone made in JavaFX");
         Label l2 = new Label("by Nikolaos Perris");
