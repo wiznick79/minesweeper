@@ -455,6 +455,8 @@ public class Controller implements Initializable  {
         Label l2 = new Label();
         Label l3 = new Label();
         Stage gameover = new Stage();
+        double width = 300.0;
+        double height = 120.0;
         gameover.initModality(Modality.APPLICATION_MODAL);
         gameover.initStyle(StageStyle.UTILITY);
         if (win) {
@@ -501,15 +503,22 @@ public class Controller implements Initializable  {
         buttons.getChildren().addAll(newGameBtn,closeBtn);
         layout.getChildren().addAll(l1,l2,l3,buttons);
         layout.setAlignment(Pos.CENTER);
-        Scene scn = new Scene(layout,300,120);
+        Scene scene = new Scene(layout,width,height);
         gameover.setResizable(false);
-        gameover.setScene(scn);
+        gameover.setScene(scene);
+        Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
+        double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
+        gameover.setX(xPos - width/2 - calcDecW()/2);
+        gameover.setY(yPos - height/2 - calcDecH()/2);
         gameover.showAndWait();
     }
 
     @FXML
     private void scoresWindow(ActionEvent actionEvent) {
         Stage bestScores = new Stage();
+        double width = 200.0;
+        double height = 100.0;
         bestScores.initModality(Modality.APPLICATION_MODAL);
         bestScores.setTitle("Best Scores");
         bestScores.initStyle(StageStyle.UTILITY);
@@ -521,9 +530,14 @@ public class Controller implements Initializable  {
         VBox layout = new VBox(5);
         layout.getChildren().addAll(easy,normal,hard,btn);
         layout.setAlignment(Pos.CENTER);
-        Scene scn = new Scene(layout,200,100);
+        Scene scene = new Scene(layout,width,height);
         bestScores.setResizable(false);
-        bestScores.setScene(scn);
+        bestScores.setScene(scene);
+        Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
+        double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
+        bestScores.setX(xPos - width/2 - calcDecW()/2);
+        bestScores.setY(yPos - height/2 - calcDecH()/2);
         bestScores.showAndWait();
     }
 
@@ -561,6 +575,8 @@ public class Controller implements Initializable  {
     @FXML
     private void aboutWindow(ActionEvent actionEvent) {
         Stage about = new Stage();
+        double width = 320.0;
+        double height = 130.0;
         about.initModality(Modality.APPLICATION_MODAL);
         about.setTitle("About Minesweeper");
         about.initStyle(StageStyle.UTILITY);
@@ -580,15 +596,23 @@ public class Controller implements Initializable  {
         VBox layout = new VBox(3);
         layout.getChildren().addAll(l1,l2,email,l3,btn);
         layout.setAlignment(Pos.CENTER);
-        Scene scn = new Scene(layout,320,130);
+        Scene scene = new Scene(layout,width,height);
         about.setResizable(false);
-        about.setScene(scn);
+        about.setScene(scene);
+        Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
+        double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
+        about.setX(xPos - width/2 - calcDecW()/2);
+        about.setY(yPos - height/2 - calcDecH()/2);
         about.showAndWait();
     }
 
     @FXML
     private void helpWindow(ActionEvent actionEvent) {
         Stage help = new Stage();
+        double width = 330.0;
+        double height = 140.0;
+        help.initModality(Modality.APPLICATION_MODAL);
         help.setTitle("Help");
         help.initStyle(StageStyle.UTILITY);
         Label l1 = new Label("This Minesweeper clone plays just like the classic Windows Minesweeper. Choose a difficulty level or make your own custom game and have fun!");
@@ -599,8 +623,13 @@ public class Controller implements Initializable  {
         VBox layout = new VBox(3);
         layout.getChildren().addAll(l1,btn);
         layout.setAlignment(Pos.CENTER);
-        Scene scn = new Scene(layout,330,140);
-        help.setScene(scn);
+        Scene scene = new Scene(layout,width,height);
+        help.setScene(scene);
+        Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
+        double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
+        help.setX(xPos - width/2 - calcDecW()/2);
+        help.setY(yPos - height/2 - calcDecH()/2);
         help.showAndWait();
     }
 }
