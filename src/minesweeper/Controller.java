@@ -333,7 +333,7 @@ public class Controller implements Initializable  {
         // enable the double-click to open adjacent tiles for the revealed tile
         tile.setOnMouseClicked(e -> {
             if ((e.getButton()==MouseButton.PRIMARY) && (e.getClickCount() == 2))
-                openAdjacentTiles(gboard,tile);
+                openAdjacentTiles(gboard, tile);
         });
         tileView = new ImageView(tileImage);
         tileView.setFitHeight(TILE_SIZE);
@@ -389,6 +389,8 @@ public class Controller implements Initializable  {
         tile.setGraphic(tileView);
     }
 
+    /*
+    // Alternative function
     private boolean checkWin(Gameboard gboard) {
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
@@ -397,9 +399,8 @@ public class Controller implements Initializable  {
                 if (!gboard.getMatrix()[row][col].isOpen() && !gboard.getMatrix()[row][col].isMine())
                     return false;
         return true;
-    }
+    } */
 
-    /* Alternative function
     private boolean checkWin(Gameboard gboard) {
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
@@ -410,7 +411,7 @@ public class Controller implements Initializable  {
                 if (gboard.getMatrix()[row][col].isOpen())
                     count++;
         return count == (rows*columns) - gboard.getMines();
-    }*/
+    }
 
     private void gameOver(Gameboard gboard, boolean win) {
         timer.stop();
@@ -444,24 +445,35 @@ public class Controller implements Initializable  {
             l1.setText("Congratulations! You won!");
             int score = Integer.parseInt(timeLabel.getText());
             l2.setText("Your time was " + score + " seconds.");
-            if (gboard.getDifficulty().equals("easy") && score < scores[0]) {
-                highScore = true;
-                scores[0] = score;
-            }
-            else if (gboard.getDifficulty().equals("normal") && score < scores[1]) {
-                highScore = true;
-                scores[1] = score;
-            }
-            else if (gboard.getDifficulty().equals("hard") && score<scores[2]) {
-                highScore = true;
-                scores[2] = score;
+            switch (gboard.getDifficulty()) {
+                case "easy":
+                    if (score < scores[0]) {
+                        highScore = true;
+                        scores[0] = score;
+                    }
+                    bestScore = scores[0];
+                    break;
+                case "normal":
+                    if (score < scores[1]) {
+                        highScore = true;
+                        scores[1] = score;
+                    }
+                    bestScore = scores[1];
+                    break;
+                case "hard":
+                    if (score < scores[2]) {
+                        highScore = true;
+                        scores[2] = score;
+                    }
+                    bestScore = scores[2];
+                    break;
             }
             if (highScore) {
                 l3.setText("You have the fastest time for this difficulty!");
                 saveScores();
             }
             else {
-                l3.setText("Best time: " + bestScore);
+                l3.setText("Best time: " + bestScore + " seconds");
             }
         }
         else {
@@ -473,8 +485,8 @@ public class Controller implements Initializable  {
         Button newGameBtn = new Button("New Game");
         newGameBtn.setPrefWidth(100.0);
         newGameBtn.setOnMouseClicked(e -> {
-            gameover.close();
             generateEmptyGameGrid(gboard.getRows(), gboard.getColumns(), gboard.getMines(), gboard.getDifficulty());
+            gameover.close();
         });
         Button closeBtn = new Button ("Close");
         closeBtn.setPrefWidth(100.0);
