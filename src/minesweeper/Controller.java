@@ -119,22 +119,6 @@ public class Controller implements Initializable  {
         loadScores();
     }
 
-    private double calcDecW () {
-        double dec;
-        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        Scene scene = mainAnchorPane.getScene();
-        dec = stage.getWidth() - scene.getWidth();
-        return dec;
-    }
-
-    private double calcDecH () {
-        double dec;
-        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        Scene scene = mainAnchorPane.getScene();
-        dec = stage.getHeight() - scene.getHeight();
-        return dec;
-    }
-
     public void easyGame(ActionEvent actionEvent) {
         generateEmptyGameGrid(9,9,10,"easy");
     }
@@ -344,18 +328,6 @@ public class Controller implements Initializable  {
         }
     }
 
-    /*
-    // Alternative function
-    private boolean checkWin(Gameboard gboard) {
-        int rows = gboard.getRows();
-        int columns = gboard.getColumns();
-        for (int row = 0; row < rows; row++)
-            for (int col = 0; col < columns; col++)
-                if (!gboard.getMatrix()[row][col].isOpen() && !gboard.getMatrix()[row][col].isMine())
-                    return false;
-        return true;
-    } */
-
     private boolean checkWin(Gameboard gboard) {
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
@@ -366,6 +338,17 @@ public class Controller implements Initializable  {
                     count++;
         return count == (rows*columns) - gboard.getMines();
     }
+
+    /* // Alternative function
+    private boolean checkWin(Gameboard gboard) {
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
+                if (!gboard.getMatrix()[row][col].isOpen() && !gboard.getMatrix()[row][col].isMine())
+                    return false;
+        return true;
+    } */
 
     private void gameOver(Gameboard gboard, boolean win) {
         timer.stop();
@@ -460,31 +443,6 @@ public class Controller implements Initializable  {
         gameover.setX(xPos - width/2 - calcDecW()/2);
         gameover.setY(yPos - height/2 - calcDecH()/2);
         gameover.showAndWait();
-    }
-
-    private void saveScores() {
-        try (PrintWriter pw = new PrintWriter("scores.txt")) {
-            for (int i = 0; i < 3; i++)
-                pw.println(scores[i]);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void loadScores() {
-        try (BufferedReader br = new BufferedReader(new FileReader(new File("scores.txt")))) {
-            int i=0;
-            String line = br.readLine();
-            while (line != null) {
-                scores[i] = Integer.parseInt(line);
-                i++;
-                line = br.readLine();
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println("Scores file not found.");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 
     @FXML
@@ -595,7 +553,7 @@ public class Controller implements Initializable  {
 
     private String loadHelpText() {
         StringBuilder helpText = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(new File("help.txt")))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/data/help.txt")))) {
             String line = br.readLine();
             while (line != null) {
                 helpText.append(line).append("\n");
@@ -607,6 +565,47 @@ public class Controller implements Initializable  {
             ex.printStackTrace();
         }
         return helpText.toString();
+    }
+
+    private void saveScores() {
+        try (PrintWriter pw = new PrintWriter("scores.txt")) {
+            for (int i = 0; i < 3; i++)
+                pw.println(scores[i]);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void loadScores() {
+        try (BufferedReader br = new BufferedReader(new FileReader(new File("scores.txt")))) {
+            int i=0;
+            String line = br.readLine();
+            while (line != null) {
+                scores[i] = Integer.parseInt(line);
+                i++;
+                line = br.readLine();
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("Scores file not found.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private double calcDecW () {
+        double dec;
+        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
+        Scene scene = mainAnchorPane.getScene();
+        dec = stage.getWidth() - scene.getWidth();
+        return dec;
+    }
+
+    private double calcDecH () {
+        double dec;
+        Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
+        Scene scene = mainAnchorPane.getScene();
+        dec = stage.getHeight() - scene.getHeight();
+        return dec;
     }
 
     public void handleQuit(ActionEvent actionEvent) {
