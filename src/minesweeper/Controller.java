@@ -392,7 +392,7 @@ public class Controller implements Initializable  {
         Label l2 = new Label();
         Label l3 = new Label();
         Stage gameover = new Stage();
-        double width = 300.0;
+        double width = 320.0;
         double height = 120.0;
         gameover.initModality(Modality.APPLICATION_MODAL);
         gameover.initStyle(StageStyle.UTILITY);
@@ -491,7 +491,7 @@ public class Controller implements Initializable  {
     @FXML
     private void scoresWindow(ActionEvent actionEvent) {
         Stage bestScores = new Stage();
-        double width = 240.0;
+        double width = 260.0;
         double height = 110.0;
         bestScores.initModality(Modality.APPLICATION_MODAL);
         bestScores.setTitle("Best Scores");
@@ -500,7 +500,7 @@ public class Controller implements Initializable  {
         Label normal = new Label("Normal: " + scores[1] + " seconds");
         Label hard = new Label("Hard: " + scores[2] + " seconds");
         Button resetBtn = new Button("Reset Scores");
-        resetBtn.setPrefWidth(100.0);
+        resetBtn.setPrefWidth(110.0);
         resetBtn.setOnAction(e -> {
             scores[0] = 9999;
             easy.setText("Easy: " + scores[0] + " seconds");
@@ -511,7 +511,7 @@ public class Controller implements Initializable  {
             saveScores();
         });
         Button closeBtn = new Button ("Close");
-        closeBtn.setPrefWidth(100.0);
+        closeBtn.setPrefWidth(110.0);
         closeBtn.setOnAction(e -> bestScores.close());
         VBox layout = new VBox(5);
         HBox buttons = new HBox (20);
