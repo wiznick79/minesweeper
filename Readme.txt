@@ -4,6 +4,7 @@ Git repository : github.com/wiznick79/minesweeper/
 
 08/07/2019 v0.93
 - Minor improvements
+- Help file added
 
 06/07/2019 v0.92
 - Minor improvements
