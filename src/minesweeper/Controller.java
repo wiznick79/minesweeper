@@ -19,8 +19,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -55,8 +53,6 @@ public class Controller implements Initializable  {
     public Button customGameButton;
     public GridPane gameGridPane;
     public AnchorPane mainAnchorPane;
-    public AnchorPane anchorPane;
-    public VBox mainVBox;
     public Text title;
     public Label timeLabel;
     public Label tLabel;
@@ -95,28 +91,19 @@ public class Controller implements Initializable  {
 
     @Override
     public void initialize (URL location, ResourceBundle resources){
-        boardRows.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>30)
-                    boardRows.setText(oldValue);
-            }
+        boardRows.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>30)
+                boardRows.setText(oldValue);
         });
 
-        boardColumns.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>40)
-                    boardColumns.setText(oldValue);
-            }
+        boardColumns.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>40)
+                boardColumns.setText(oldValue);
         });
 
-        boardMines.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>99)
-                    boardMines.setText(oldValue);
-            }
+        boardMines.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>99)
+                boardMines.setText(oldValue);
         });
 
         tLabel.setFont(Font.font("Arial", 14));
@@ -234,13 +221,7 @@ public class Controller implements Initializable  {
             for (int col = 0; col < columns; col++) {
                 Tile tile = new Tile(row, col, 0, false, false, false, false);
                 gameGridPane.add(tile, col, row);
-                Image tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
-                ImageView tileView = new ImageView(tileImage);
-                tileView.setFitHeight(TILE_SIZE);
-                tileView.setFitWidth(TILE_SIZE);
-                tile.setPadding(new Insets(0));
-                tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
-                tile.setGraphic(tileView);
+                tile.setImage("/images/tile.png");
                 tile.setOnAction(e -> generateGameGrid(rows, columns, mines, difficulty, tile.getRow(), tile.getCol()));
             }
         }
@@ -254,13 +235,7 @@ public class Controller implements Initializable  {
             for (int col = 0; col < columns; col++) {
                 Tile tile = gboard.getMatrix()[row][col];
                 gameGridPane.add(tile, col, row);
-                Image tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
-                ImageView tileView = new ImageView(tileImage);
-                tileView.setFitHeight(TILE_SIZE);
-                tileView.setFitWidth(TILE_SIZE);
-                tile.setPadding(new Insets(0));
-                tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
-                tile.setGraphic(tileView);
+                tile.setImage("/images/tile.png");
                 tile.setOnMouseClicked(e -> {
                     if (e.getButton() == MouseButton.PRIMARY)
                         checkTile(gboard, tile);
@@ -274,7 +249,6 @@ public class Controller implements Initializable  {
     }
 
     private void checkTile(Gameboard gboard, Tile tile) {
-
         if (tile.isOpen() || tile.isFlag()) return;     // if the tile is already opened or is flagged, nothing happens
 
         revealTile(gboard, tile);   // show the tile
@@ -307,39 +281,32 @@ public class Controller implements Initializable  {
     }
 
     private void revealTile(Gameboard gboard, Tile tile) {
-        Image tileImage = null;
-        ImageView tileView;
         tile.setOpen(true);
         if (tile.isMine())
-            tileImage = new Image(getClass().getResourceAsStream("/images/mine.png"));
+            tile.setImage("/images/mine.png");
         else if ((tile.getAdjMines()==1))
-            tileImage = new Image(getClass().getResourceAsStream("/images/1.png"));
+            tile.setImage("/images/1.png");
         else if ((tile.getAdjMines()==2))
-            tileImage = new Image(getClass().getResourceAsStream("/images/2.png"));
+            tile.setImage("/images/2.png");
         else if ((tile.getAdjMines()==3))
-            tileImage = new Image(getClass().getResourceAsStream("/images/3.png"));
+            tile.setImage("/images/3.png");
         else if ((tile.getAdjMines()==4))
-            tileImage = new Image(getClass().getResourceAsStream("/images/4.png"));
+            tile.setImage("/images/4.png");
         else if ((tile.getAdjMines()==5))
-            tileImage = new Image(getClass().getResourceAsStream("/images/5.png"));
+            tile.setImage("/images/5.png");
         else if ((tile.getAdjMines()==6))
-            tileImage = new Image(getClass().getResourceAsStream("/images/6.png"));
+            tile.setImage("/images/6.png");
         else if ((tile.getAdjMines()==7))
-            tileImage = new Image(getClass().getResourceAsStream("/images/7.png"));
+            tile.setImage("/images/7.png");
         else if ((tile.getAdjMines()==8))
-            tileImage = new Image(getClass().getResourceAsStream("/images/8.png"));
+            tile.setImage("/images/8.png");
         else if ((tile.getAdjMines()==0))
-            tileImage = new Image(getClass().getResourceAsStream("/images/opentile.png"));
+            tile.setImage("/images/opentile.png");
         // enable the double-click to open adjacent tiles for the revealed tile
         tile.setOnMouseClicked(e -> {
             if ((e.getButton()==MouseButton.PRIMARY) && (e.getClickCount() == 2))
                 openAdjacentTiles(gboard, tile);
         });
-        tileView = new ImageView(tileImage);
-        tileView.setFitHeight(TILE_SIZE);
-        tileView.setFitWidth(TILE_SIZE);
-        tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
-        tile.setGraphic(tileView);
     }
 
     private void openAdjacentTiles(Gameboard gboard, Tile tile) {
@@ -365,28 +332,21 @@ public class Controller implements Initializable  {
 
     private void flagTile(Tile tile) {
         if (tile.isOpen()) return;
-        Image tileImage;
-        ImageView tileView;
         if (!tile.isFlag() && !tile.isQmark()) {
-            tileImage = new Image(getClass().getResourceAsStream("/images/flag.png"));
+            tile.setImage("/images/flag.png");
             tile.setFlag(true);
             minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())-1)); // decrease mines counter
         }
         else if (tile.isFlag()){
-            tileImage = new Image(getClass().getResourceAsStream("/images/qmark.png"));
+            tile.setImage("/images/qmark.png");
             tile.setFlag(false);
             tile.setQmark(true);
             minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())+1)); // increase mines counter
         }
         else {
-            tileImage = new Image(getClass().getResourceAsStream("/images/tile.png"));
+            tile.setImage("/images/tile.png");
             tile.setQmark(false);
         }
-        tileView = new ImageView(tileImage);
-        tileView.setFitHeight(TILE_SIZE);
-        tileView.setFitWidth(TILE_SIZE);
-        tile.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" );
-        tile.setGraphic(tileView);
     }
 
     /*
@@ -405,7 +365,6 @@ public class Controller implements Initializable  {
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
         int count = 0;
-
         for (int row = 0; row < rows; row++)
             for (int col = 0; col < columns; col++)
                 if (gboard.getMatrix()[row][col].isOpen())
@@ -639,26 +598,5 @@ public class Controller implements Initializable  {
 
     public void handleQuit(ActionEvent actionEvent) {
         System.exit(0);
-    }
-
-    private int countFlags(Gameboard gboard) {
-        int count=0;
-        int rows = gboard.getRows();
-        int columns = gboard.getColumns();
-        for (int row=0; row < rows; row++)
-            for (int col=0; col < columns; col++)
-                if (gboard.getMatrix()[row][col].isFlag()) count++;
-        return count;
-    }
-
-    private void printGameBoard (Gameboard gboard, int rows, int columns) {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                if (gboard.getMatrix()[row][col].isMine())
-                    System.out.print("| M ");
-                else System.out.print("| " + gboard.getMatrix()[row][col].getAdjMines() + " ");
-            }
-            System.out.println("|");
-        }
     }
 }
