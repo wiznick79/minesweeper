@@ -6,8 +6,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -428,10 +426,10 @@ public class Controller implements Initializable  {
                     break;
             }
             if (highScore) {
-                l3.setText("You have the fastest time for this difficulty!");
+                l3.setText("You have the new fastest time for this difficulty!");
                 saveScores();
             }
-            else {
+            else if (!gboard.getDifficulty().equals("custom")) {
                 l3.setText("Best time: " + bestScore + " seconds");
             }
         }
