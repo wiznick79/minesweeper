@@ -532,6 +532,8 @@ public class Controller implements Initializable  {
         help.initModality(Modality.APPLICATION_MODAL);
         help.setTitle("Help");
         help.initStyle(StageStyle.UTILITY);
+        Label l1 = new Label("Minesweeper help");
+        l1.setFont(Font.font("Arial", 18));
         Text t1 = new Text(loadHelpText());
         t1.setWrappingWidth(width-30);
         t1.setLineSpacing(4.0);
@@ -539,7 +541,7 @@ public class Controller implements Initializable  {
         closeBtn.setPrefWidth(100.0);
         closeBtn.setOnAction(e -> help.close());
         VBox layout = new VBox(2);
-        layout.getChildren().addAll(t1,closeBtn);
+        layout.getChildren().addAll(l1,t1,closeBtn);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
         help.setScene(scene);
