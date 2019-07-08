@@ -26,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -115,11 +116,7 @@ public class Controller implements Initializable  {
 
         msgLabel.setFont(Font.font("Arial", FontWeight.BOLD,14));
         msgLabel.setTextFill(Color.BLUE);
-        try {
-            loadScores();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        loadScores();
     }
 
     private double calcDecW () {
@@ -474,7 +471,7 @@ public class Controller implements Initializable  {
         }
     }
 
-    private void loadScores() throws IOException {
+    private void loadScores() {
         try (BufferedReader br = new BufferedReader(new FileReader(new File("scores.txt")))) {
             int i=0;
             String line = br.readLine();
@@ -485,6 +482,8 @@ public class Controller implements Initializable  {
             }
         } catch (FileNotFoundException ex) {
             System.out.println("Scores file not found.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -570,19 +569,19 @@ public class Controller implements Initializable  {
     @FXML
     private void helpWindow(ActionEvent actionEvent) {
         Stage help = new Stage();
-        double width = 330.0;
-        double height = 140.0;
+        double width = 480.0;
+        double height = 400.0;
         help.initModality(Modality.APPLICATION_MODAL);
         help.setTitle("Help");
         help.initStyle(StageStyle.UTILITY);
-        Label l1 = new Label("This Minesweeper clone plays just like the classic Windows Minesweeper. Choose a difficulty level or make your own custom game and have fun!");
-        l1.setWrapText(true);
-        l1.setPadding(new Insets(10));
+        Text t1 = new Text(loadHelpText());
+        t1.setWrappingWidth(width-30);
+        t1.setLineSpacing(4.0);
         Button closeBtn = new Button ("Close");
         closeBtn.setPrefWidth(100.0);
         closeBtn.setOnAction(e -> help.close());
-        VBox layout = new VBox(3);
-        layout.getChildren().addAll(l1,closeBtn);
+        VBox layout = new VBox(2);
+        layout.getChildren().addAll(t1,closeBtn);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
         help.setScene(scene);
@@ -592,6 +591,22 @@ public class Controller implements Initializable  {
         help.setX(xPos - width/2 - calcDecW()/2);
         help.setY(yPos - height/2 - calcDecH()/2);
         help.showAndWait();
+    }
+
+    private String loadHelpText() {
+        StringBuilder helpText = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(new File("help.txt")))) {
+            String line = br.readLine();
+            while (line != null) {
+                helpText.append(line).append("\n");
+                line = br.readLine();
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("Help file not found.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return helpText.toString();
     }
 
     public void handleQuit(ActionEvent actionEvent) {

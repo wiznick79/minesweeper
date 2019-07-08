@@ -1,0 +1,12 @@
+Minesweeper help
+
+This game is a clone of the classic Minesweeper game.
+The goal is to reveal all tiles without clicking on any mine.
+You can choose between 3 difficulty levels or make your own custom game.
+The number of the mines is shown in the top right corner. On the top left corner you can see the elapsed time.
+When you left-click on a tile, it will get revealed. 
+If it contains a mine, you lose the game. If it contains a number, it's the number of mines that exist in adjacent tiles. If it is empty, its adjacent tiles will also get revealed.
+You can flag a tile that you believe is a mine by right clicking it. A flagged tile cannot be opened unless you remove the flag.
+When not sure if a tile has a mine or not, you can put a question mark on it with a second right click. A third right click will remove the question mark.
+If you double click on a opened tile with number and there are equal flags around it, the unopened adjacent tiles will get revealed.
+Be careful with this though! If you have put wrong flags, you are going to lose!
