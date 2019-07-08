@@ -528,7 +528,7 @@ public class Controller implements Initializable  {
     private void helpWindow(ActionEvent actionEvent) {
         Stage help = new Stage();
         double width = 480.0;
-        double height = 420.0;
+        double height = 450.0;
         help.initModality(Modality.APPLICATION_MODAL);
         help.setTitle("Help");
         help.initStyle(StageStyle.UTILITY);
