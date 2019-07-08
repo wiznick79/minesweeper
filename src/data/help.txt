@@ -5,4 +5,4 @@ Minesweeper starts when a player clicks on a square with the left mouse button. 
 You can mark a mine by putting a flag on it with the right mouse button. If all the mines touching a number are flagged, you can double click on that number to clear the remaining adjacent squares. Be careful with this though! If you have put wrong flags, you are going to lose! If you are unsure, you can put a question mark by right clicking on a flagged square. A third right click clears the question mark.
 You win by clearing all the safe squares and lose if you click on a mine. 
 A mine counter tells you how many mines are still hidden and a time counter keeps track of your score. 
-There are three levels of difficulty: Beginner has 10 mines, Intermediate has 40 mines, and Expert has 99 mines. It is also possible to create custom levels.
+There are three levels of difficulty: Easy has 10 mines, Normal has 40 mines, and Hard has 99 mines. It is also possible to create custom levels.
