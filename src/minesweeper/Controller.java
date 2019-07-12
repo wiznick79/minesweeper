@@ -54,7 +54,6 @@ public class Controller implements Initializable  {
     public Label tLabel;
     public Label mLabel;
     public Label minesLabel;
-    public Label msgLabel;
     private static boolean questionMark;
     private static String color;
 
@@ -65,9 +64,7 @@ public class Controller implements Initializable  {
     private Timeline timer = new Timeline (
             new KeyFrame(
                     Duration.seconds(1),
-                    event -> {
-                        time.set(time.get() + 1);
-                    }
+                    event -> time.set(time.get() + 1)
             )
     );
 
@@ -98,8 +95,6 @@ public class Controller implements Initializable  {
         minesLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
         minesLabel.setTextFill(Color.RED);
 
-        msgLabel.setFont(Font.font("Arial", FontWeight.BOLD,14));
-        msgLabel.setTextFill(Color.BLUE);
        // mainAnchorPane.setStyle("-fx-background-color: rgba(20,20,20,1);");
         loadScores();
     }
@@ -126,8 +121,7 @@ public class Controller implements Initializable  {
         timeLabel.setVisible(false);
         mLabel.setVisible(false);
         minesLabel.setVisible(false);
-        msgLabel.setVisible(false);
-        newGameButton.setVisible(false);
+         newGameButton.setVisible(false);
         labelRows.setVisible(true);
         labelColumns.setVisible(true);
         labelMines.setVisible(true);
@@ -176,8 +170,6 @@ public class Controller implements Initializable  {
         minesLabel.setLayoutX(columns*(TILE_SIZE+1)-30);
         minesLabel.setVisible(true);
         minesLabel.setText(Integer.toString(mines));
-        msgLabel.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
-        msgLabel.setVisible(false);
         newGameButton.setPrefWidth(75.0);
         newGameButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(rows,columns,mines,difficulty));
@@ -360,7 +352,6 @@ public class Controller implements Initializable  {
         gameover.initModality(Modality.APPLICATION_MODAL);
         gameover.initStyle(StageStyle.UTILITY);
         if (win) {
-            msgLabel.setText("YOU WON!");
             gameover.setTitle("You won!");
             l1.setText("Congratulations! You won!");
             int score = Integer.parseInt(timeLabel.getText());
@@ -397,11 +388,9 @@ public class Controller implements Initializable  {
             }
         }
         else {
-            msgLabel.setText("YOU LOST!");
             gameover.setTitle("You lost!");
             l1.setText("You lost!");
         }
-        msgLabel.setVisible(true);
         Button newGameBtn = new Button("New Game");
         newGameBtn.setPrefWidth(100.0);
         newGameBtn.setOnMouseClicked(e -> {
