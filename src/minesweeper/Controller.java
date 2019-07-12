@@ -1,11 +1,10 @@
 package minesweeper;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,10 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -26,11 +22,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.net.URL;
@@ -50,6 +46,7 @@ public class Controller implements Initializable  {
     public Button normalGameButton;
     public Button hardGameButton;
     public Button customGameButton;
+    public Button pauseButton;
     public GridPane gameGridPane;
     public AnchorPane mainAnchorPane;
     public Text title;
@@ -58,35 +55,21 @@ public class Controller implements Initializable  {
     public Label mLabel;
     public Label minesLabel;
     public Label msgLabel;
+    private static boolean questionMark;
+    private static String color;
 
     private static Rectangle2D vBounds = Screen.getPrimary().getVisualBounds();
     private static final double TILE_SIZE = vBounds.getHeight()>1000 ? 35.0 : 27.0;
-    private DoubleProperty time = new SimpleDoubleProperty();
     private int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
-    private AnimationTimer timer = new AnimationTimer() {
-
-        BooleanProperty running = new SimpleBooleanProperty();
-        private long startTime;
-
-        @Override
-        public void start() {
-            startTime = System.currentTimeMillis();
-            running.set(true);
-            super.start();
-        }
-
-        @Override
-        public void stop() {
-            running.set(false);
-            super.stop();
-        }
-
-        @Override
-        public void handle (long timestamp) {
-            long now = System.currentTimeMillis();
-            time.set((now - startTime) / 1000.0);
-        }
-    };
+    private final IntegerProperty time = new SimpleIntegerProperty();
+    private Timeline timer = new Timeline (
+            new KeyFrame(
+                    Duration.seconds(1),
+                    event -> {
+                        time.set(time.get() + 1);
+                    }
+            )
+    );
 
     @Override
     public void initialize (URL location, ResourceBundle resources){
@@ -108,14 +91,16 @@ public class Controller implements Initializable  {
         tLabel.setFont(Font.font("Arial", 14));
         timeLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
         timeLabel.setTextFill(Color.RED);
-        timeLabel.textProperty().bind(time.asString("%03.0f"));
 
+        timer.setCycleCount(Animation.INDEFINITE);
+        timeLabel.textProperty().bind(time.asString("%03d"));
         mLabel.setFont(Font.font("Arial",14));
         minesLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
         minesLabel.setTextFill(Color.RED);
 
         msgLabel.setFont(Font.font("Arial", FontWeight.BOLD,14));
         msgLabel.setTextFill(Color.BLUE);
+       // mainAnchorPane.setStyle("-fx-background-color: rgba(20,20,20,1);");
         loadScores();
     }
 
@@ -183,7 +168,6 @@ public class Controller implements Initializable  {
         createButton.setVisible(false);
         gameGridPane.getChildren().clear();
         tLabel.setVisible(true);
-        timer.stop();
         time.setValue(0);
         timeLabel.setVisible(true);
         mLabel.setLayoutX(columns*(TILE_SIZE+1)-40);
@@ -193,9 +177,13 @@ public class Controller implements Initializable  {
         minesLabel.setText(Integer.toString(mines));
         msgLabel.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
         msgLabel.setVisible(false);
-        newGameButton.setVisible(true);
+        newGameButton.setPrefWidth(75.0);
         newGameButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(rows,columns,mines,difficulty));
+        newGameButton.setVisible(true);
+        pauseButton.setPrefWidth(75.0);
+        pauseButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
+        pauseButton.setVisible(true);
         for (int row=0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 Tile tile = new Tile(row, col, 0, false, false, false, false);
@@ -209,7 +197,7 @@ public class Controller implements Initializable  {
     private void generateGameGrid(int rows, int columns, int mines, String difficulty, int y, int x) {
         Gameboard gboard = Gameboard.generateGameboard(rows, columns, mines, difficulty, y, x);
         gameGridPane.getChildren().clear();
-        timeLabel.setVisible(true);
+        pauseButton.setOnAction(e -> pauseGame(gboard));
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 Tile tile = gboard.getMatrix()[row][col];
@@ -223,7 +211,7 @@ public class Controller implements Initializable  {
                 });
             }
         }
-        timer.start();
+        timer.play();
         checkTile(gboard,gboard.getMatrix()[y][x]);
     }
 
@@ -316,15 +304,19 @@ public class Controller implements Initializable  {
             tile.setFlag(true);
             minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())-1)); // decrease mines counter
         }
-        else if (tile.isFlag()){
+        else if (tile.isFlag() && questionMark){
             tile.setImage("/images/qmark.png");
             tile.setFlag(false);
             tile.setQmark(true);
             minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())+1)); // increase mines counter
         }
-        else {
+        else if (tile.isQmark()) {
             tile.setImage("/images/tile.png");
             tile.setQmark(false);
+        } else {
+            tile.setImage("/images/tile.png");
+            tile.setFlag(false);
+            minesLabel.setText(Integer.toString(Integer.parseInt(minesLabel.getText())+1)); // increase mines counter
         }
     }
 
@@ -339,17 +331,6 @@ public class Controller implements Initializable  {
         return count == (rows*columns) - gboard.getMines();
     }
 
-    /* // Alternative function
-    private boolean checkWin(Gameboard gboard) {
-        int rows = gboard.getRows();
-        int columns = gboard.getColumns();
-        for (int row = 0; row < rows; row++)
-            for (int col = 0; col < columns; col++)
-                if (!gboard.getMatrix()[row][col].isOpen() && !gboard.getMatrix()[row][col].isMine())
-                    return false;
-        return true;
-    } */
-
     private void gameOver(Gameboard gboard, boolean win) {
         timer.stop();
         int rows = gboard.getRows();
@@ -362,6 +343,7 @@ public class Controller implements Initializable  {
             }
         }
         gameOverWindow(gboard,win);
+        pauseButton.setOnAction(null);
     }
 
     @FXML
@@ -445,6 +427,40 @@ public class Controller implements Initializable  {
         gameover.showAndWait();
     }
 
+    private void pauseGame(Gameboard gboard) {
+        timer.pause();
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row=0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                gboard.getMatrix()[row][col].setDisable(true);
+                if (gboard.getMatrix()[row][col].isOpen() || gboard.getMatrix()[row][col].isFlag()) {
+                    gboard.getMatrix()[row][col].setImage("/images/tile.png");
+                }
+            }
+        }
+        pauseButton.setText("Unpause");
+        pauseButton.setOnAction(e -> unpauseGame(gboard));
+    }
+
+    private void unpauseGame(Gameboard gboard) {
+        timer.play();
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row=0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                gboard.getMatrix()[row][col].setDisable(false);
+                if (gboard.getMatrix()[row][col].isFlag())
+                    gboard.getMatrix()[row][col].setImage("/images/flag.png");
+                else if (gboard.getMatrix()[row][col].isOpen()) {
+                    revealTile(gboard, gboard.getMatrix()[row][col]);
+                }
+            }
+        }
+        pauseButton.setText("Pause");
+        pauseButton.setOnAction(e -> pauseGame(gboard));
+    }
+
     @FXML
     private void scoresWindow(ActionEvent actionEvent) {
         Stage bestScores = new Stage();
@@ -486,6 +502,44 @@ public class Controller implements Initializable  {
         bestScores.setX(xPos - width/2 - calcDecW()/2);
         bestScores.setY(yPos - height/2 - calcDecH()/2);
         bestScores.showAndWait();
+    }
+
+    @FXML
+    private void optionsWindow(ActionEvent actionEvent) {
+        Stage settings = new Stage();
+        double width = 320.0;
+        double height = 120.0;
+        settings.initModality(Modality.APPLICATION_MODAL);
+        settings.setTitle("Settings");
+        settings.initStyle(StageStyle.UTILITY);
+        Label l1 = new Label("Color: ");
+        l1.setPadding(new Insets(10,10,0,10));
+        CheckBox c1 = new CheckBox("Use question marks");
+        c1.setSelected(questionMark);
+        c1.setPadding(new Insets(10,10,10,10));
+        Button okBtn = new Button ("OK");
+        okBtn.setPrefWidth(100.0);
+        okBtn.setOnAction(e -> {
+            questionMark = c1.isSelected();
+            settings.close();
+        });
+        Button cancelBtn = new Button ("Cancel");
+        cancelBtn.setPrefWidth(100.0);
+        cancelBtn.setOnAction(e -> settings.close());
+        HBox buttons = new HBox (20);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(okBtn,cancelBtn);
+        VBox layout = new VBox(5);
+        layout.getChildren().addAll(l1,c1, buttons);
+        Scene scene = new Scene(layout,width,height);
+        settings.setResizable(false);
+        settings.setScene(scene);
+        Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
+        double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
+        settings.setX(xPos - width/2 - calcDecW()/2);
+        settings.setY(yPos - height/2 - calcDecH()/2);
+        settings.showAndWait();
     }
 
     @FXML

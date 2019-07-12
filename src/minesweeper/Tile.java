@@ -34,7 +34,7 @@ public class Tile extends Button {
         tileView.setFitHeight(TILE_SIZE);
         tileView.setFitWidth(TILE_SIZE);
         this.setPadding(new Insets(0));
-        this.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        this.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-color: transparent");
         this.setGraphic(tileView);
     }
 
