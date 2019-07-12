@@ -168,6 +168,7 @@ public class Controller implements Initializable  {
         createButton.setVisible(false);
         gameGridPane.getChildren().clear();
         tLabel.setVisible(true);
+        timer.stop();
         time.setValue(0);
         timeLabel.setVisible(true);
         mLabel.setLayoutX(columns*(TILE_SIZE+1)-40);
