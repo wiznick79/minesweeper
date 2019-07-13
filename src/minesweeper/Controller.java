@@ -54,6 +54,7 @@ public class Controller implements Initializable  {
     public Label tLabel;
     public Label mLabel;
     public Label minesLabel;
+    public Label msgLabel;
     private static boolean questionMark;
     private static String color;
 
@@ -94,6 +95,7 @@ public class Controller implements Initializable  {
         mLabel.setFont(Font.font("Arial",14));
         minesLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
         minesLabel.setTextFill(Color.RED);
+        msgLabel.setFont(Font.font("Arial",FontWeight.BOLD,18));
 
        // mainAnchorPane.setStyle("-fx-background-color: rgba(20,20,20,1);");
         loadScores();
@@ -121,7 +123,7 @@ public class Controller implements Initializable  {
         timeLabel.setVisible(false);
         mLabel.setVisible(false);
         minesLabel.setVisible(false);
-         newGameButton.setVisible(false);
+        newGameButton.setVisible(false);
         labelRows.setVisible(true);
         labelColumns.setVisible(true);
         labelMines.setVisible(true);
@@ -170,13 +172,17 @@ public class Controller implements Initializable  {
         minesLabel.setLayoutX(columns*(TILE_SIZE+1)-30);
         minesLabel.setVisible(true);
         minesLabel.setText(Integer.toString(mines));
-        newGameButton.setPrefWidth(75.0);
-        newGameButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
+        newGameButton.setPrefWidth(100.0);
+        newGameButton.setLayoutX((columns*(TILE_SIZE+1)+decW-200)/2);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(rows,columns,mines,difficulty));
         newGameButton.setVisible(true);
-        pauseButton.setPrefWidth(75.0);
-        pauseButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 44 + decW);
+        pauseButton.setPrefWidth(100.0);
+        pauseButton.setLayoutX((columns*(TILE_SIZE+1)+decW+10)/2);
         pauseButton.setVisible(true);
+        msgLabel.setLayoutX((columns*(TILE_SIZE+1)+decW-95)/2);
+        msgLabel.setVisible(false);
+        System.out.println(decW +", " + ((columns*(TILE_SIZE+1)+decW-95)/2));
+        System.out.println(mainAnchorPane.getScene().getWidth());
         for (int row=0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 Tile tile = new Tile(row, col, 0, false, false, false, false);
@@ -354,6 +360,8 @@ public class Controller implements Initializable  {
         if (win) {
             gameover.setTitle("You won!");
             l1.setText("Congratulations! You won!");
+            msgLabel.setText("YOU WON!");
+            msgLabel.setTextFill(Color.BLUE);
             int score = Integer.parseInt(timeLabel.getText());
             l2.setText("Your time was " + score + " seconds.");
             switch (gboard.getDifficulty()) {
@@ -390,7 +398,10 @@ public class Controller implements Initializable  {
         else {
             gameover.setTitle("You lost!");
             l1.setText("You lost!");
+            msgLabel.setText("YOU LOST!");
+            msgLabel.setTextFill(Color.RED);
         }
+        msgLabel.setVisible(true);
         Button newGameBtn = new Button("New Game");
         newGameBtn.setPrefWidth(100.0);
         newGameBtn.setOnMouseClicked(e -> {
@@ -417,6 +428,7 @@ public class Controller implements Initializable  {
         gameover.showAndWait();
     }
 
+    @FXML
     private void pauseGame(Gameboard gboard) {
         timer.pause();
         int rows = gboard.getRows();
@@ -502,7 +514,7 @@ public class Controller implements Initializable  {
         settings.initModality(Modality.APPLICATION_MODAL);
         settings.setTitle("Settings");
         settings.initStyle(StageStyle.UTILITY);
-        Label l1 = new Label("Color: ");
+        Label l1 = new Label(" ");
         l1.setPadding(new Insets(10,10,0,10));
         CheckBox c1 = new CheckBox("Use question marks");
         c1.setSelected(questionMark);
@@ -571,8 +583,8 @@ public class Controller implements Initializable  {
     @FXML
     private void helpWindow(ActionEvent actionEvent) {
         Stage help = new Stage();
-        double width = 480.0;
-        double height = 450.0;
+        double width = 500.0;
+        double height = 470.0;
         help.initModality(Modality.APPLICATION_MODAL);
         help.setTitle("Help");
         help.initStyle(StageStyle.UTILITY);
