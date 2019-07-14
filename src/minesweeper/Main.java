@@ -14,8 +14,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("board.fxml"));
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icon.png")));
         primaryStage.setTitle("Minesweeper v0.95");
-        primaryStage.setScene(new Scene(root, 343, 420));
-        primaryStage.sizeToScene();
+        primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
         primaryStage.show();
     }

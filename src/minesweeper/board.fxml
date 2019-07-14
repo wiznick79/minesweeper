@@ -32,7 +32,7 @@
         <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
       </Menu>
     </MenuBar>
-      <AnchorPane prefHeight="420.0" prefWidth="343.0">
+      <AnchorPane minHeight="395.0" minWidth="344.0">
         <Text fx:id="title" layoutX="55.0" layoutY="40.0" stroke="black" text="Welcome to Minesweeper" >
           <font> <Font name="Arial" size="20.0" /> </font>
         </Text>
@@ -47,13 +47,13 @@
         <TextField fx:id="boardColumns" layoutX="80.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
         <TextField fx:id="boardMines" layoutX="150.0" layoutY="25.0" prefHeight="25.0" prefWidth="50.0" visible="false" />
         <Button fx:id="createButton" layoutX="220.0" layoutY="25.0" mnemonicParsing="false" onAction="#createCustomGame" text="Create board" visible="false" />
-        <Label fx:id="tLabel" layoutX="25.0" layoutY="5.0" text="Time" visible="false" />
-        <Label fx:id="timeLabel" layoutX="25.0" layoutY="25.0" visible="false" />
+        <Label fx:id="tLabel" layoutX="20.0" layoutY="5.0" text="Time" visible="false" />
+        <Label fx:id="timeLabel" layoutX="20.0" layoutY="25.0" visible="false" />
         <Label fx:id="mLabel" layoutY="5.0"  text="Mines" visible="false" />
         <Label fx:id="minesLabel" layoutY="25.0" visible="false" />
         <Label fx:id="msgLabel" layoutY="30.0" visible="false" />
         <Button fx:id="newGameButton" layoutY="03.0" mnemonicParsing="false" text="New Game" visible="false" />
-        <Button fx:id="pauseButton" layoutY="03.0" mnemonicParsing="false" text="Pause" visible="false" />
+        <Button fx:id="pauseButton" layoutY="30.0" mnemonicParsing="false" text="Pause" visible="false" />
         <GridPane fx:id="gameGridPane" alignment="TOP_CENTER" layoutY="50.0" hgap="1.0" vgap="1.0">
           <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

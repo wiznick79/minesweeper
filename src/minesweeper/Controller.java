@@ -148,7 +148,7 @@ public class Controller implements Initializable  {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
         double decW = calcDecW();
         double decH = calcDecH();
-        stage.setWidth(((TILE_SIZE+1)*columns)+19+decW);
+        stage.setWidth(((TILE_SIZE+1)*columns)+20+decW);
         stage.setHeight((TILE_SIZE+1)*rows+96+decH);
         title.setVisible(false);
         labelRows.setVisible(false);
@@ -173,11 +173,11 @@ public class Controller implements Initializable  {
         minesLabel.setVisible(true);
         minesLabel.setText(Integer.toString(mines));
         newGameButton.setPrefWidth(100.0);
-        newGameButton.setLayoutX((columns*(TILE_SIZE+1)+decW-200)/2);
+        newGameButton.setLayoutX((columns*(TILE_SIZE+1)+decW-100)/2);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(rows,columns,mines,difficulty));
         newGameButton.setVisible(true);
         pauseButton.setPrefWidth(100.0);
-        pauseButton.setLayoutX((columns*(TILE_SIZE+1)+decW+10)/2);
+        pauseButton.setLayoutX((columns*(TILE_SIZE+1)+decW-100)/2);
         pauseButton.setVisible(true);
         msgLabel.setLayoutX((columns*(TILE_SIZE+1)+decW-95)/2);
         msgLabel.setVisible(false);
@@ -342,7 +342,6 @@ public class Controller implements Initializable  {
             }
         }
         gameOverWindow(gboard,win);
-        pauseButton.setOnAction(null);
     }
 
     @FXML
@@ -401,6 +400,7 @@ public class Controller implements Initializable  {
             msgLabel.setText("YOU LOST!");
             msgLabel.setTextFill(Color.RED);
         }
+        pauseButton.setVisible(false);
         msgLabel.setVisible(true);
         Button newGameBtn = new Button("New Game");
         newGameBtn.setPrefWidth(100.0);
@@ -501,8 +501,8 @@ public class Controller implements Initializable  {
         Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
         double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
         double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
-        bestScores.setX(xPos - width/2 - calcDecW()/2);
-        bestScores.setY(yPos - height/2 - calcDecH()/2);
+        bestScores.setX(xPos - (width+calcDecW())/2);
+        bestScores.setY(yPos - (height+calcDecH())/2);
         bestScores.showAndWait();
     }
 
@@ -539,8 +539,8 @@ public class Controller implements Initializable  {
         Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
         double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
         double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
-        settings.setX(xPos - width/2 - calcDecW()/2);
-        settings.setY(yPos - height/2 - calcDecH()/2);
+        settings.setX(xPos - (width+calcDecW())/2);
+        settings.setY(yPos - (height+calcDecH())/2);
         settings.showAndWait();
     }
 
@@ -575,8 +575,8 @@ public class Controller implements Initializable  {
         Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
         double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
         double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
-        about.setX(xPos - width/2 - calcDecW()/2);
-        about.setY(yPos - height/2 - calcDecH()/2);
+        about.setX(xPos - (width+calcDecW())/2);
+        about.setY(yPos - (height+calcDecH())/2);
         about.showAndWait();
     }
 
@@ -604,8 +604,8 @@ public class Controller implements Initializable  {
         Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
         double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
         double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
-        help.setX(xPos - width/2 - calcDecW()/2);
-        help.setY(yPos - height/2 - calcDecH()/2);
+        help.setX(xPos - (width+calcDecW())/2);
+        help.setY(yPos - (height+calcDecH())/2);
         help.showAndWait();
     }
 
