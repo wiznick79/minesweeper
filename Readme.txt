@@ -2,6 +2,11 @@ Minesweeper clone by Nikolaos Perris (nperris@gmail.com), (c) 2019
 Git repository : github.com/wiznick79/minesweeper/
 
 
+14/07/2019 v0.96
+- Some visual improvements
+- In custom game mode, changed the input TextFields to ComboBoxes. The minimum number of mines that can be selected
+  is 5% of the number of tiles. The maximum number is 50%.
+
 12/07/2019 v0.95
 - Added pause button. Gameboard is disabled and hidden during pause.
 - Added option to enable/disable question marks in the options menu. By default, they are disabled.

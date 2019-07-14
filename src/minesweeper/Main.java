@@ -13,7 +13,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("board.fxml"));
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icon.png")));
-        primaryStage.setTitle("Minesweeper v0.95");
+        primaryStage.setTitle("Minesweeper v0.96");
         primaryStage.setScene(new Scene(root,344,420));
         primaryStage.setResizable(false);
         primaryStage.show();

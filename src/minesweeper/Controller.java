@@ -34,9 +34,6 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable  {
 
-    public TextField boardRows;
-    public TextField boardColumns;
-    public TextField boardMines;
     public Label labelRows;
     public Label labelColumns;
     public Label labelMines;
@@ -55,9 +52,11 @@ public class Controller implements Initializable  {
     public Label mLabel;
     public Label minesLabel;
     public Label msgLabel;
-    private static boolean questionMark;
-    private static String color;
+    public ComboBox<Integer> comboRows;
+    public ComboBox<Integer> comboCols;
+    public ComboBox<Integer> comboMines;
 
+    private static boolean questionMark;
     private static Rectangle2D vBounds = Screen.getPrimary().getVisualBounds();
     private static final double TILE_SIZE = vBounds.getHeight()>1000 ? 35.0 : 27.0;
     private int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
@@ -71,19 +70,31 @@ public class Controller implements Initializable  {
 
     @Override
     public void initialize (URL location, ResourceBundle resources){
-        boardRows.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)<9 || Integer.parseInt(newValue)>30)
-                boardRows.setText(oldValue);
+
+        for (int i = 9; i < 31; i++)
+            comboRows.getItems().add(i);
+        for (int i = 9; i < 41; i++)
+            comboCols.getItems().add(i);
+        comboRows.setValue(9);
+        comboCols.setValue(9);
+        for (int i = 5; i <= 40; i++)
+            comboMines.getItems().add(i);
+        comboMines.setValue(10);
+
+        comboRows.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            comboMines.getItems().clear();
+            int m = comboCols.getValue()*newValue;
+            for (int i = m/20; i <= m/2; i++)
+                comboMines.getItems().add(i);
+            comboMines.setValue(m/10);
         });
 
-        boardColumns.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)<9 || Integer.parseInt(newValue)>40)
-                boardColumns.setText(oldValue);
-        });
-
-        boardMines.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>99)
-                boardMines.setText(oldValue);
+        comboCols.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            comboMines.getItems().clear();
+            int m = comboRows.getValue()*newValue;
+            for (int i = m/20; i <= m/2; i++)
+                comboMines.getItems().add(i);
+            comboMines.setValue(m/10);
         });
 
         tLabel.setFont(Font.font("Arial", 14));
@@ -97,7 +108,6 @@ public class Controller implements Initializable  {
         minesLabel.setTextFill(Color.RED);
         msgLabel.setFont(Font.font("Arial",FontWeight.BOLD,18));
         loadScores();
-       // mainAnchorPane.setStyle("-fx-background-color: rgba(20,20,20,1);");
     }
 
     public void easyGame(ActionEvent actionEvent) {
@@ -128,21 +138,14 @@ public class Controller implements Initializable  {
         labelRows.setVisible(true);
         labelColumns.setVisible(true);
         labelMines.setVisible(true);
-        boardRows.setVisible(true);
-        boardColumns.setVisible(true);
-        boardMines.setVisible(true);
+        comboRows.setVisible(true);
+        comboCols.setVisible(true);
+        comboMines.setVisible(true);
         createButton.setVisible(true);
     }
 
     public void createCustomGame(ActionEvent actionEvent) {
-        int rows,columns,mines;
-        if (boardRows.getText().isEmpty()) rows=9;
-        else rows = Integer.parseInt(boardRows.getText());
-        if (boardColumns.getText().isEmpty()) columns=9;
-        else columns = Integer.parseInt(boardColumns.getText());
-        if (boardMines.getText().isEmpty()) mines=10;
-        else mines = Integer.parseInt(boardMines.getText());
-        generateEmptyGameGrid(rows,columns,mines,"custom");
+        generateEmptyGameGrid(comboRows.getValue(),comboCols.getValue(),comboMines.getValue(),"custom");
     }
 
     private void generateEmptyGameGrid(int rows, int columns, int mines, String difficulty) {
@@ -153,9 +156,9 @@ public class Controller implements Initializable  {
         labelRows.setVisible(false);
         labelColumns.setVisible(false);
         labelMines.setVisible(false);
-        boardRows.setVisible(false);
-        boardColumns.setVisible(false);
-        boardMines.setVisible(false);
+        comboRows.setVisible(false);
+        comboCols.setVisible(false);
+        comboMines.setVisible(false);
         easyGameButton.setVisible(false);
         normalGameButton.setVisible(false);
         hardGameButton.setVisible(false);
