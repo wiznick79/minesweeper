@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -11,11 +12,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.control.ComboBox?>
 
 <AnchorPane fx:id="mainAnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.Controller">
   <VBox>
-    <MenuBar>
+    <MenuBar minWidth="344.0">
       <Menu mnemonicParsing="false" text="Game">
         <Menu mnemonicParsing="false" text="New Game">
           <MenuItem mnemonicParsing="false" onAction="#easyGame" text="Easy (9x9, 10 mines)" />
@@ -32,14 +32,14 @@
         <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
       </Menu>
     </MenuBar>
-      <AnchorPane minHeight="395.0" minWidth="344.0">
-        <Text fx:id="title" layoutX="55.0" layoutY="40.0" stroke="black" text="Welcome to Minesweeper" >
+      <AnchorPane>
+        <Text fx:id="title" layoutX="55.0" layoutY="40.0" stroke="black" text="Welcome to Minesweeper">
           <font> <Font name="Arial" size="20.0" /> </font>
         </Text>
-        <Button fx:id="easyGameButton" layoutX="70.0" layoutY="70.0" prefWidth="200" text="Easy (9x9, 10 mines)" onAction="#easyGame" />
-        <Button fx:id="normalGameButton" layoutX="70.0" layoutY="110.0" prefWidth="200" text="Normal (16x16, 40 mines)" onAction="#normalGame" />
-        <Button fx:id="hardGameButton" layoutX="70.0" layoutY="150.0" prefWidth="200" text="Hard (20x25, 99 mines)" onAction="#hardGame" />
-        <Button fx:id="customGameButton" layoutX="70.0" layoutY="190.0" prefWidth="200" text="Create custom game" onAction="#customGame" />
+        <Button fx:id="easyGameButton" layoutX="70.0" layoutY="70.0" onAction="#easyGame" prefWidth="200" text="Easy (9x9, 10 mines)" />
+        <Button fx:id="normalGameButton" layoutX="70.0" layoutY="110.0" onAction="#normalGame" prefWidth="200" text="Normal (16x16, 40 mines)" />
+        <Button fx:id="hardGameButton" layoutX="70.0" layoutY="150.0" onAction="#hardGame" prefWidth="200" text="Hard (20x25, 99 mines)" />
+        <Button fx:id="customGameButton" layoutX="70.0" layoutY="190.0" onAction="#customGame" prefWidth="200" text="Create custom game" />
         <Label fx:id="labelRows" layoutX="15.0" layoutY="5.0" text="Rows:" visible="false" />
         <Label fx:id="labelColumns" layoutX="85.0" layoutY="5.0" text="Columns:" visible="false" />
         <Label fx:id="labelMines" layoutX="155.0" layoutY="5.0" text="Mines:" visible="false" />
@@ -49,12 +49,12 @@
         <Button fx:id="createButton" layoutX="225.0" layoutY="25.0" mnemonicParsing="false" onAction="#createCustomGame" text="Create board" visible="false" />
         <Label fx:id="tLabel" layoutX="20.0" layoutY="5.0" text="Time" visible="false" />
         <Label fx:id="timeLabel" layoutX="20.0" layoutY="25.0" visible="false" />
-        <Label fx:id="mLabel" layoutY="5.0"  text="Mines" visible="false" />
+        <Label fx:id="mLabel" layoutY="5.0" text="Mines" visible="false" />
         <Label fx:id="minesLabel" layoutY="25.0" visible="false" />
         <Label fx:id="msgLabel" layoutY="30.0" visible="false" />
-        <Button fx:id="newGameButton" layoutY="03.0" prefWidth="100.0" mnemonicParsing="false" text="New Game" visible="false" />
-        <Button fx:id="pauseButton" layoutY="30.0" prefWidth="100.0" mnemonicParsing="false" text="Pause" visible="false" />
-        <GridPane fx:id="gameGridPane" alignment="TOP_CENTER" layoutY="50.0" hgap="1.0" vgap="1.0">
+        <Button fx:id="newGameButton" layoutY="03.0" mnemonicParsing="false" prefWidth="100.0" text="New Game" visible="false" />
+        <Button fx:id="pauseButton" layoutY="30.0" mnemonicParsing="false" prefWidth="100.0" text="Pause" visible="false" />
+        <GridPane fx:id="gameGridPane" alignment="TOP_CENTER" hgap="1.0" layoutY="50.0" vgap="1.0">
           <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
           </padding>
