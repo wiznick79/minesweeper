@@ -72,12 +72,12 @@ public class Controller implements Initializable  {
     @Override
     public void initialize (URL location, ResourceBundle resources){
         boardRows.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>30)
+            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)<9 || Integer.parseInt(newValue)>30)
                 boardRows.setText(oldValue);
         });
 
         boardColumns.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)>40)
+            if (!newValue.matches("\\d{0,2}?") || Integer.parseInt(newValue)<9 || Integer.parseInt(newValue)>40)
                 boardColumns.setText(oldValue);
         });
 
@@ -113,7 +113,7 @@ public class Controller implements Initializable  {
         generateEmptyGameGrid(20,25,99,"hard");
     }
 
-    public void customGame (ActionEvent actionEvent) {
+    public void customGame(ActionEvent actionEvent) {
         title.setVisible(false);
         easyGameButton.setVisible(false);
         normalGameButton.setVisible(false);
@@ -124,6 +124,8 @@ public class Controller implements Initializable  {
         mLabel.setVisible(false);
         minesLabel.setVisible(false);
         newGameButton.setVisible(false);
+        pauseButton.setVisible(false);
+        msgLabel.setVisible(false);
         labelRows.setVisible(true);
         labelColumns.setVisible(true);
         labelMines.setVisible(true);
@@ -172,17 +174,13 @@ public class Controller implements Initializable  {
         minesLabel.setLayoutX(columns*(TILE_SIZE+1)-30);
         minesLabel.setVisible(true);
         minesLabel.setText(Integer.toString(mines));
-        newGameButton.setPrefWidth(100.0);
-        newGameButton.setLayoutX((columns*(TILE_SIZE+1)+decW-100)/2);
+        newGameButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 41);
         newGameButton.setOnAction(e -> generateEmptyGameGrid(rows,columns,mines,difficulty));
         newGameButton.setVisible(true);
-        pauseButton.setPrefWidth(100.0);
-        pauseButton.setLayoutX((columns*(TILE_SIZE+1)+decW-100)/2);
+        pauseButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 41);
         pauseButton.setVisible(true);
-        msgLabel.setLayoutX((columns*(TILE_SIZE+1)+decW-95)/2);
+        msgLabel.setLayoutX(columns*(TILE_SIZE+1)/2 - 40);
         msgLabel.setVisible(false);
-        System.out.println(decW +", " + ((columns*(TILE_SIZE+1)+decW-95)/2));
-        System.out.println(mainAnchorPane.getScene().getWidth());
         for (int row=0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 Tile tile = new Tile(row, col, 0, false, false, false, false);
