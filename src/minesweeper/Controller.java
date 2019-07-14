@@ -69,9 +69,9 @@ public class Controller implements Initializable  {
     @Override
     public void initialize (URL location, ResourceBundle resources){
 
-        for (int i = 9; i < 31; i++)
+        for (int i = 9; i <= 25; i++)
             comboRows.getItems().add(i);
-        for (int i = 9; i < 41; i++)
+        for (int i = 9; i <= 40; i++)
             comboCols.getItems().add(i);
         comboRows.setValue(9);
         comboCols.setValue(9);
