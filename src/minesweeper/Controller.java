@@ -19,8 +19,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
@@ -57,11 +55,11 @@ public class Controller implements Initializable  {
     public ComboBox<Integer> comboMines;
 
     private static boolean questionMark;
-    private static Rectangle2D vBounds = Screen.getPrimary().getVisualBounds();
+    private static final Rectangle2D vBounds = Screen.getPrimary().getVisualBounds();
     private static final double TILE_SIZE = vBounds.getHeight()>1000 ? 35.0 : 27.0;
-    private int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
+    private static int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
     private final IntegerProperty time = new SimpleIntegerProperty();
-    private Timeline timer = new Timeline (
+    private final Timeline timer = new Timeline (
             new KeyFrame(
                     Duration.seconds(1),
                     event -> time.set(time.get() + 1)

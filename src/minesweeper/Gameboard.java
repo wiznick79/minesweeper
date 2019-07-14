@@ -2,7 +2,7 @@ package minesweeper;
 
 import java.util.Random;
 
-public class Gameboard {
+class Gameboard {
     private int rows;
     private int columns;
     private int mines;
@@ -17,7 +17,7 @@ public class Gameboard {
         this.setDifficulty(difficulty);
     }
 
-    public static Gameboard generateGameboard(int rows, int columns, int mines, String difficulty, int y, int x) {
+    static Gameboard generateGameboard(int rows, int columns, int mines, String difficulty, int y, int x) {
         Tile[][] matrix = new Tile[rows][columns];
         // initialize game metrix with empty tiles
         for (int row = 0; row < rows; row++) {
@@ -56,7 +56,7 @@ public class Gameboard {
         return random.nextInt(max);
     }
 
-    public int getColumns() {
+    int getColumns() {
         return columns;
     }
 
@@ -64,7 +64,7 @@ public class Gameboard {
         this.columns = columns;
     }
 
-    public int getRows() {
+    int getRows() {
         return rows;
     }
 
@@ -72,7 +72,7 @@ public class Gameboard {
         this.rows = rows;
     }
 
-    public Tile[][] getMatrix() {
+    Tile[][] getMatrix() {
         return matrix;
     }
 
@@ -80,7 +80,7 @@ public class Gameboard {
         this.matrix = matrix;
     }
 
-    public int getMines() {
+    int getMines() {
         return mines;
     }
 
@@ -88,7 +88,7 @@ public class Gameboard {
         this.mines = mines;
     }
 
-    public String getDifficulty() { return difficulty; }
+    String getDifficulty() { return difficulty; }
 
-    public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
+    private void setDifficulty(String difficulty) { this.difficulty = difficulty; }
 }
