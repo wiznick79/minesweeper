@@ -80,7 +80,6 @@ public class Controller implements Initializable  {
         for (int i = 5; i <= 40; i++)
             comboMines.getItems().add(i);
         comboMines.setValue(10);
-        comboMines.setStyle("-fx-font-size: 12");
 
         comboRows.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             comboMines.getItems().clear();
@@ -98,16 +97,14 @@ public class Controller implements Initializable  {
             comboMines.setValue(m/10);
         });
 
-        tLabel.setFont(Font.font("Arial", 14));
-        timeLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
-        timeLabel.setTextFill(Color.RED);
-
+        mainAnchorPane.setStyle("-fx-font-family: Arial; -fx-font-size: 12");
+        tLabel.setStyle("-fx-font-size: 14");
+        timeLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: red");
         timer.setCycleCount(Animation.INDEFINITE);
         timeLabel.textProperty().bind(time.asString("%03d"));
-        mLabel.setFont(Font.font("Arial",14));
-        minesLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
-        minesLabel.setTextFill(Color.RED);
-        msgLabel.setFont(Font.font("Arial",FontWeight.BOLD,18));
+        mLabel.setStyle("-fx-font-size: 14");
+        minesLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: red");
+        msgLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold");
         loadScores();
     }
 
@@ -588,7 +585,7 @@ public class Controller implements Initializable  {
         help.setTitle("Help");
         help.initStyle(StageStyle.UTILITY);
         Label l1 = new Label("Minesweeper help");
-        l1.setFont(Font.font("Arial", 18));
+        l1.setStyle("-fx-font-family: Arial; -fx-font-size: 18");
         TextArea t1 = new TextArea(loadHelpText());
         t1.setWrapText(true);
         t1.setPrefHeight(330);
