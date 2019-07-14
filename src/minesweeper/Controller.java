@@ -96,9 +96,8 @@ public class Controller implements Initializable  {
         minesLabel.setFont(Font.font("Arial", FontWeight.BOLD,20));
         minesLabel.setTextFill(Color.RED);
         msgLabel.setFont(Font.font("Arial",FontWeight.BOLD,18));
-
-       // mainAnchorPane.setStyle("-fx-background-color: rgba(20,20,20,1);");
         loadScores();
+       // mainAnchorPane.setStyle("-fx-background-color: rgba(20,20,20,1);");
     }
 
     public void easyGame(ActionEvent actionEvent) {
@@ -148,10 +147,8 @@ public class Controller implements Initializable  {
 
     private void generateEmptyGameGrid(int rows, int columns, int mines, String difficulty) {
         Stage stage = (Stage) mainAnchorPane.getScene().getWindow();
-        double decW = calcDecW();
-        double decH = calcDecH();
-        stage.setWidth(((TILE_SIZE+1)*columns)+20+decW);
-        stage.setHeight((TILE_SIZE+1)*rows+96+decH);
+        stage.setWidth(((TILE_SIZE+1)*columns)+20+calcDecW());
+        stage.setHeight((TILE_SIZE+1)*rows+96+calcDecH());
         title.setVisible(false);
         labelRows.setVisible(false);
         labelColumns.setVisible(false);
@@ -179,7 +176,7 @@ public class Controller implements Initializable  {
         newGameButton.setVisible(true);
         pauseButton.setLayoutX(columns*(TILE_SIZE+1)/2 - 41);
         pauseButton.setVisible(true);
-        msgLabel.setLayoutX(columns*(TILE_SIZE+1)/2 - 40);
+        msgLabel.setLayoutX(columns*(TILE_SIZE+1)/2 - 39);
         msgLabel.setVisible(false);
         for (int row=0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -421,8 +418,8 @@ public class Controller implements Initializable  {
         Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
         double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
         double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
-        gameover.setX(xPos - width/2 - calcDecW()/2);
-        gameover.setY(yPos - height/2 - calcDecH()/2);
+        gameover.setX(xPos - (width+calcDecW())/2);
+        gameover.setY(yPos - (height+calcDecH())/2);
         gameover.showAndWait();
     }
 
