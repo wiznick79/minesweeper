@@ -30,7 +30,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-class Controller implements Initializable  {
+public class Controller implements Initializable  {
 
     public Label labelRows;
     public Label labelColumns;
