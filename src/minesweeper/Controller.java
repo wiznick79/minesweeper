@@ -435,11 +435,11 @@ public class Controller implements Initializable  {
                 }
             }
         }
-        pauseButton.setText("Unpause");
-        pauseButton.setOnAction(e -> unpauseGame(gboard));
+        pauseButton.setText("Resume");
+        pauseButton.setOnAction(e -> resumeGame(gboard));
     }
 
-    private void unpauseGame(Gameboard gboard) {
+    private void resumeGame(Gameboard gboard) {
         timer.play();
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
