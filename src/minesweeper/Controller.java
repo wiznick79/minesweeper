@@ -579,21 +579,22 @@ public class Controller implements Initializable  {
     private void helpWindow(ActionEvent actionEvent) {
         Stage help = new Stage();
         double width = 500.0;
-        double height = 470.0;
+        double height = 420.0;
         help.initModality(Modality.APPLICATION_MODAL);
         help.setTitle("Help");
         help.initStyle(StageStyle.UTILITY);
         Label l1 = new Label("Minesweeper help");
         l1.setFont(Font.font("Arial", 18));
-        Text t1 = new Text(loadHelpText());
-        t1.setWrappingWidth(width-30);
-        t1.setLineSpacing(4.0);
+        TextArea t1 = new TextArea(loadHelpText());
+        t1.setWrapText(true);
+        t1.setPrefHeight(330);
         Button closeBtn = new Button ("Close");
         closeBtn.setPrefWidth(100.0);
         closeBtn.setOnAction(e -> help.close());
-        VBox layout = new VBox(2);
+        VBox layout = new VBox(10);
         layout.getChildren().addAll(l1,t1,closeBtn);
         layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(10));
         Scene scene = new Scene(layout,width,height);
         help.setScene(scene);
         Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
