@@ -80,6 +80,7 @@ public class Controller implements Initializable  {
         for (int i = 5; i <= 40; i++)
             comboMines.getItems().add(i);
         comboMines.setValue(10);
+        comboMines.setStyle("-fx-font-size: 12");
 
         comboRows.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             comboMines.getItems().clear();

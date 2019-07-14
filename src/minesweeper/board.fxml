@@ -45,8 +45,8 @@
         <Label fx:id="labelMines" layoutX="155.0" layoutY="5.0" text="Mines:" visible="false" />
         <ComboBox fx:id="comboRows" layoutX="10.0" layoutY="25.0" prefHeight="25.0" prefWidth="65.0" visible="false" />
         <ComboBox fx:id="comboCols" layoutX="80.0" layoutY="25.0" prefHeight="25.0" prefWidth="65.0" visible="false" />
-        <ComboBox fx:id="comboMines" layoutX="150.0" layoutY="25.0" prefHeight="25.0" prefWidth="65.0" visible="false" />
-        <Button fx:id="createButton" layoutX="220.0" layoutY="25.0" mnemonicParsing="false" onAction="#createCustomGame" text="Create board" visible="false" />
+        <ComboBox fx:id="comboMines" layoutX="150.0" layoutY="25.0" prefHeight="25.0" prefWidth="70.0" visible="false" />
+        <Button fx:id="createButton" layoutX="225.0" layoutY="25.0" mnemonicParsing="false" onAction="#createCustomGame" text="Create board" visible="false" />
         <Label fx:id="tLabel" layoutX="20.0" layoutY="5.0" text="Time" visible="false" />
         <Label fx:id="timeLabel" layoutX="20.0" layoutY="25.0" visible="false" />
         <Label fx:id="mLabel" layoutY="5.0"  text="Mines" visible="false" />
