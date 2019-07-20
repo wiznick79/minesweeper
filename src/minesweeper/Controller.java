@@ -14,6 +14,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -207,6 +208,12 @@ public class Controller implements Initializable  {
         }
         timer.play();
         checkTile(gboard,gboard.getMatrix()[y][x]);
+        // the following lines enable the Shift+P 'cheat'
+        mainAnchorPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.P && e.isShiftDown())
+                revealBoard(gboard);
+        });
+        mainAnchorPane.setOnKeyReleased(e -> hideBoard(gboard));
     }
 
     private void checkTile(Gameboard gboard, Tile tile) {
@@ -665,4 +672,40 @@ public class Controller implements Initializable  {
     public void handleQuit(ActionEvent actionEvent) {
         System.exit(0);
     }
+
+    /* this function is activated by Shift+P. It reveals the board to the player */
+    private void revealBoard(Gameboard gboard) {
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if (!gboard.getMatrix()[row][col].isOpen()) {
+                    revealTile(gboard, gboard.getMatrix()[row][col]);
+                    gboard.getMatrix()[row][col].setOpen(false);
+                }
+            }
+        }
+    }
+    /* this function hides the board again when player stops pressing Shift+P */
+    private void hideBoard(Gameboard gboard) {
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Tile tile = gboard.getMatrix()[row][col];
+                if (!tile.isOpen()) {
+                    if (tile.isFlag())
+                        tile.setImage("/images/flag.png");
+                    else tile.setImage("/images/tile.png");
+                    tile.setOnMouseClicked(e -> {
+                        if (e.getButton() == MouseButton.PRIMARY)
+                            checkTile(gboard, tile);
+                        else if (e.getButton() == MouseButton.SECONDARY)
+                            flagTile(tile);
+                    });
+                }
+            }
+        }
+    }
+
 }

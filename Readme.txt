@@ -1,6 +1,8 @@
 Minesweeper clone by Nikolaos Perris (nperris@gmail.com), (c) 2019
 Git repository : github.com/wiznick79/minesweeper/
 
+20/07/2019 v0.97
+- Added a 'cheat'
 
 14/07/2019 v0.96
 - Some visual improvements
