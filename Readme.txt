@@ -1,6 +1,9 @@
 Minesweeper clone by Nikolaos Perris (nperris@gmail.com), (c) 2019
 Git repository : github.com/wiznick79/minesweeper/
 
+23/07/2019 v0.98
+- Added the option to repeat a gameboard
+
 20/07/2019 v0.97
 - Added a 'cheat'
 

@@ -24,7 +24,7 @@
           <MenuItem mnemonicParsing="false" onAction="#customGame" text="Custom" />
         </Menu>
         <MenuItem mnemonicParsing="false" onAction="#optionsWindow" text="Options" />
-        <MenuItem mnemonicParsing="false" onAction="#scoresWindow" text="Best scores" />
+        <MenuItem mnemonicParsing="false" onAction="#statsWindow" text="Statistics" />
         <MenuItem mnemonicParsing="false" onAction="#handleQuit" text="Exit Game" />
       </Menu>
       <Menu mnemonicParsing="false" text="Help">

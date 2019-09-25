@@ -291,7 +291,11 @@ public class Controller implements Initializable  {
             for (int y = -1; y < 2; y++) {
                 for (int x = -1; x < 2; x++) {
                     if (row+y >= 0 && row+y < gboard.getRows() && col+x >= 0 && col+x < gboard.getColumns() && !gboard.getMatrix()[row+y][col+x].isOpen()) {
-                        checkTile(gboard, gboard.getMatrix()[row + y][col + x]);
+                        if (gboard.getMatrix()[row + y][col + x].isMine() && !gboard.getMatrix()[row + y][col + x].isFlag()) {
+                            gameOver(gboard,false);
+                            return;
+                        }
+                        else checkTile(gboard, gboard.getMatrix()[row + y][col + x]);
                     }
                 }
             }
@@ -354,7 +358,7 @@ public class Controller implements Initializable  {
         Label l2 = new Label();
         Label l3 = new Label();
         Stage gameover = new Stage();
-        double width = 320.0;
+        double width = 400.0;
         double height = 120.0;
         gameover.initModality(Modality.APPLICATION_MODAL);
         gameover.initStyle(StageStyle.UTILITY);
@@ -367,21 +371,21 @@ public class Controller implements Initializable  {
             l2.setText("Your time was " + score + " seconds.");
             switch (gboard.getDifficulty()) {
                 case "easy":
-                    if (score < scores[0]) {
+                    if (score < scores[0] && !gboard.isUsedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[0] = score;
                     }
                     bestScore = scores[0];
                     break;
                 case "normal":
-                    if (score < scores[1]) {
+                    if (score < scores[1] && !gboard.isUsedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[1] = score;
                     }
                     bestScore = scores[1];
                     break;
                 case "hard":
-                    if (score < scores[2]) {
+                    if (score < scores[2] && !gboard.isUsedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[2] = score;
                     }
@@ -405,18 +409,24 @@ public class Controller implements Initializable  {
         pauseButton.setVisible(false);
         msgLabel.setVisible(true);
         Button newGameBtn = new Button("New Game");
-        newGameBtn.setPrefWidth(100.0);
+        newGameBtn.setPrefWidth(120.0);
         newGameBtn.setOnMouseClicked(e -> {
             generateEmptyGameGrid(gboard.getRows(), gboard.getColumns(), gboard.getMines(), gboard.getDifficulty());
             gameover.close();
         });
+        Button repeateGameBtn = new Button("Repeat board");
+        repeateGameBtn.setPrefWidth(120.0);
+        repeateGameBtn.setOnMouseClicked(e -> {
+            repeatGame(gboard);
+            gameover.close();
+        });
         Button closeBtn = new Button ("Close");
-        closeBtn.setPrefWidth(100.0);
+        closeBtn.setPrefWidth(120.0);
         closeBtn.setOnMouseClicked(e -> gameover.close());
         VBox layout = new VBox(5);
-        HBox buttons = new HBox (20);
+        HBox buttons = new HBox (10);
         buttons.setAlignment(Pos.CENTER);
-        buttons.getChildren().addAll(newGameBtn,closeBtn);
+        buttons.getChildren().addAll(newGameBtn,repeateGameBtn,closeBtn);
         layout.getChildren().addAll(l1,l2,l3,buttons);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
@@ -429,6 +439,33 @@ public class Controller implements Initializable  {
         gameover.setY(yPos - (height+calcDecH())/2);
         gameover.showAndWait();
     }
+
+    private void repeatGame(Gameboard gboard) {
+        gboard.setRepeatedBoard(true);
+        time.setValue(0);
+        msgLabel.setVisible(false);
+        pauseButton.setVisible(true);
+        minesLabel.setText(Integer.toString(gboard.getMines()));
+        int rows = gboard.getRows();
+        int columns = gboard.getColumns();
+        for (int row=0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Tile tile = gboard.getMatrix()[row][col];
+                tile.setImage("/images/tile.png");
+                tile.setOpen(false);
+                tile.setFlag(false);
+                tile.setQmark(false);
+                tile.setOnMouseClicked(e -> {
+                    timer.play();
+                    if (e.getButton() == MouseButton.PRIMARY)
+                        checkTile(gboard, tile);
+                    else if (e.getButton() == MouseButton.SECONDARY)
+                        flagTile(tile);
+                });
+            }
+        }
+    }
+
 
     @FXML
     private void pauseGame(Gameboard gboard) {
@@ -466,16 +503,19 @@ public class Controller implements Initializable  {
     }
 
     @FXML
-    private void scoresWindow(ActionEvent actionEvent) {
+    private void statsWindow(ActionEvent actionEvent) {
         Stage bestScores = new Stage();
-        double width = 260.0;
+        double width = 400.0;
         double height = 110.0;
         bestScores.initModality(Modality.APPLICATION_MODAL);
-        bestScores.setTitle("Best Scores");
+        bestScores.setTitle("Statistics");
         bestScores.initStyle(StageStyle.UTILITY);
+        HBox stats = new HBox(10);
         Label easy = new Label("Easy: " + scores[0] + " seconds");
         Label normal = new Label("Normal: " + scores[1] + " seconds");
         Label hard = new Label("Hard: " + scores[2] + " seconds");
+        stats.getChildren().addAll(easy,normal,hard);
+        stats.setAlignment(Pos.CENTER);
         Button resetBtn = new Button("Reset Scores");
         resetBtn.setPrefWidth(110.0);
         resetBtn.setOnAction(e -> {
@@ -494,7 +534,7 @@ public class Controller implements Initializable  {
         HBox buttons = new HBox (20);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(resetBtn,closeBtn);
-        layout.getChildren().addAll(easy,normal,hard,buttons);
+        layout.getChildren().addAll(stats,buttons);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
         bestScores.setResizable(false);
@@ -550,7 +590,7 @@ public class Controller implements Initializable  {
     private void aboutWindow(ActionEvent actionEvent) {
         Stage about = new Stage();
         double width = 320.0;
-        double height = 120.0;
+        double height = 150.0;
         about.initModality(Modality.APPLICATION_MODAL);
         about.setTitle("About Minesweeper");
         about.initStyle(StageStyle.UTILITY);
@@ -675,6 +715,7 @@ public class Controller implements Initializable  {
 
     /* this function is activated by Shift+P. It reveals the board to the player */
     private void revealBoard(Gameboard gboard) {
+        gboard.setUsedCheat(true);
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
         for (int row = 0; row < rows; row++) {
