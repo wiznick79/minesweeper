@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -271,8 +272,9 @@ public class Controller implements Initializable  {
         else if ((tile.getAdjMines()==0))
             tile.setImage("/images/opentile.png");
         // enable the double-click to open adjacent tiles for the revealed tile
-        tile.setOnMouseClicked(e -> {
-            if ((e.getButton()==MouseButton.PRIMARY) && (e.getClickCount() == 2))
+        tile.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if ((e.getButton()==MouseButton.PRIMARY) && (e.getClickCount() == 2)
+                || (e.isPrimaryButtonDown() && e.isSecondaryButtonDown()))
                 openAdjacentTiles(gboard, tile);
         });
     }
