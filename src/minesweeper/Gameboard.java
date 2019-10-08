@@ -8,16 +8,16 @@ class Gameboard {
     private int mines;
     private Tile[][] matrix;
     private String difficulty;
-    private boolean usedCheat;
+    private boolean cheat;
     private boolean repeatedBoard;
 
-    private Gameboard(int rows, int columns, int mines, Tile[][] matrix, String difficulty, boolean usedCheat, boolean repeatedBoard) {
+    private Gameboard(int rows, int columns, int mines, Tile[][] matrix, String difficulty, boolean cheat, boolean repeatedBoard) {
         this.setRows(rows);
         this.setColumns(columns);
         this.setMines(mines);
         this.setMatrix(matrix);
         this.setDifficulty(difficulty);
-        this.setUsedCheat(usedCheat);
+        this.setCheat(cheat);
         this.setRepeatedBoard(repeatedBoard);
     }
 
@@ -96,10 +96,10 @@ class Gameboard {
 
     private void setDifficulty(String difficulty) { this.difficulty = difficulty; }
 
-    boolean isUsedCheat() { return usedCheat; }
+    boolean usedCheat() { return cheat; }
 
-    public void setUsedCheat(boolean usedCheat) {
-        this.usedCheat = usedCheat;
+    public void setCheat(boolean cheat) {
+        this.cheat = cheat;
     }
 
     boolean isRepeatedBoard() { return repeatedBoard; }

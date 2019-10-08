@@ -371,21 +371,21 @@ public class Controller implements Initializable  {
             l2.setText("Your time was " + score + " seconds.");
             switch (gboard.getDifficulty()) {
                 case "easy":
-                    if (score < scores[0] && !gboard.isUsedCheat() && !gboard.isRepeatedBoard()) {
+                    if (score < scores[0] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[0] = score;
                     }
                     bestScore = scores[0];
                     break;
                 case "normal":
-                    if (score < scores[1] && !gboard.isUsedCheat() && !gboard.isRepeatedBoard()) {
+                    if (score < scores[1] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[1] = score;
                     }
                     bestScore = scores[1];
                     break;
                 case "hard":
-                    if (score < scores[2] && !gboard.isUsedCheat() && !gboard.isRepeatedBoard()) {
+                    if (score < scores[2] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[2] = score;
                     }
@@ -715,7 +715,7 @@ public class Controller implements Initializable  {
 
     /* this function is activated by Shift+P. It reveals the board to the player */
     private void revealBoard(Gameboard gboard) {
-        gboard.setUsedCheat(true);
+        gboard.setCheat(true);
         int rows = gboard.getRows();
         int columns = gboard.getColumns();
         for (int row = 0; row < rows; row++) {
