@@ -1,6 +1,9 @@
 Minesweeper clone by Nikolaos Perris (nperris@gmail.com), (c) 2019
 Git repository : github.com/wiznick79/minesweeper/
 
+xx/10/2019 v0.99
+- When you use the built-in cheat or you repeat a gameboard, your score cannot count as a high score.
+
 23/07/2019 v0.98
 - Added the option to repeat a gameboard
 
