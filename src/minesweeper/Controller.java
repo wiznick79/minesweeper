@@ -31,6 +31,7 @@ import javafx.util.Duration;
 
 import java.io.*;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable  {
@@ -61,6 +62,9 @@ public class Controller implements Initializable  {
     private static final Rectangle2D vBounds = Screen.getPrimary().getVisualBounds();
     private static final double TILE_SIZE = vBounds.getHeight()>1000 ? 35.0 : 27.0;
     private static int[] scores = new int[]{9999,9999,9999};       // initialize scores with default of 9999
+    private static double averageTimeEasy,averageTimeNormal,averageTimeHard;
+    private static int gamesPlayedEasy,gamesPlayedNormal,gamesPlayedHard;
+    private static int gamesWonEasy,gamesWonNormal,gamesWonHard;
     private final IntegerProperty time = new SimpleIntegerProperty();
     private final Timeline timer = new Timeline (
             new KeyFrame(
@@ -215,6 +219,17 @@ public class Controller implements Initializable  {
                 revealBoard(gboard);
         });
         mainAnchorPane.setOnKeyReleased(e -> hideBoard(gboard));
+        switch (gboard.getDifficulty()) {
+            case "easy":
+                gamesPlayedEasy++;
+                break;
+            case "normal":
+                gamesPlayedNormal++;
+                break;
+            case "hard":
+                gamesPlayedHard++;
+                break;
+        }
     }
 
     private void checkTile(Gameboard gboard, Tile tile) {
@@ -373,6 +388,7 @@ public class Controller implements Initializable  {
             l2.setText("Your time was " + score + " seconds.");
             switch (gboard.getDifficulty()) {
                 case "easy":
+                    averageTimeEasy = ((averageTimeEasy*gamesWonEasy)+score)/++gamesWonEasy;
                     if (score < scores[0] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[0] = score;
@@ -380,6 +396,7 @@ public class Controller implements Initializable  {
                     bestScore = scores[0];
                     break;
                 case "normal":
+                    averageTimeNormal = ((averageTimeNormal*gamesWonNormal)+score)/++gamesWonNormal;
                     if (score < scores[1] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[1] = score;
@@ -387,6 +404,7 @@ public class Controller implements Initializable  {
                     bestScore = scores[1];
                     break;
                 case "hard":
+                    averageTimeHard = ((averageTimeHard*gamesWonHard)+score)/++gamesWonHard;
                     if (score < scores[2] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[2] = score;
@@ -506,32 +524,54 @@ public class Controller implements Initializable  {
 
     @FXML
     private void statsWindow(ActionEvent actionEvent) {
-        Stage bestScores = new Stage();
-        double width = 400.0;
-        double height = 110.0;
-        bestScores.initModality(Modality.APPLICATION_MODAL);
-        bestScores.setTitle("Statistics");
-        bestScores.initStyle(StageStyle.UTILITY);
-        HBox stats = new HBox(10);
-        Label easy = new Label("Easy: " + scores[0] + " seconds");
-        Label normal = new Label("Normal: " + scores[1] + " seconds");
-        Label hard = new Label("Hard: " + scores[2] + " seconds");
-        stats.getChildren().addAll(easy,normal,hard);
-        stats.setAlignment(Pos.CENTER);
-        Button resetBtn = new Button("Reset Scores");
+        Stage statistics = new Stage();
+        double width = 500.0;
+        double height = 170.0;
+        statistics.initModality(Modality.APPLICATION_MODAL);
+        statistics.setTitle("Statistics");
+        statistics.initStyle(StageStyle.UTILITY);
+        GridPane stats = new GridPane();
+        stats.setPadding(new Insets(10, 10, 10, 10));
+        stats.setVgap(5);
+        stats.setHgap(15);
+        stats.add(new Label("Best time"),1,0);
+        stats.add(new Label("Average time"),2,0);
+        stats.add(new Label("Games won"),3,0);
+        stats.add(new Label("Games played"),4,0);
+        stats.add(new Label("Easy:"),0,1);
+        stats.add(new Label("Normal:"),0,2);
+        stats.add(new Label("Hard:"),0,3);
+        Label easy = new Label(scores[0] + " secs");
+        Label normal = new Label( scores[1] + " secs");
+        Label hard = new Label(scores[2] + " secs");
+        stats.add(easy,1,1);
+        stats.add(normal,1,2);
+        stats.add(hard,1,3);
+        DecimalFormat df = new DecimalFormat("0.0");
+        stats.add(new Label(df.format(averageTimeEasy) + " secs"),2,1);
+        stats.add(new Label(df.format(averageTimeNormal) + " secs"),2,2);
+        stats.add(new Label(df.format(averageTimeHard) + " secs"),2,3);
+        stats.add(new Label(gamesWonEasy + ""),3,1);
+        stats.add(new Label(gamesWonNormal + ""),3,2);
+        stats.add(new Label(gamesWonHard + ""),3,3);
+        stats.add(new Label(gamesPlayedEasy + ""),4,1);
+        stats.add(new Label(gamesPlayedNormal + ""),4,2);
+        stats.add(new Label(gamesPlayedHard + ""),4,3);
+        //stats.setAlignment(Pos.CENTER);
+        Button resetBtn = new Button("Reset Stats");
         resetBtn.setPrefWidth(110.0);
         resetBtn.setOnAction(e -> {
             scores[0] = 9999;
-            easy.setText("Easy: " + scores[0] + " seconds");
+            easy.setText(scores[0] + " secs");
             scores[1] = 9999;
-            normal.setText("Normal: " + scores[1] + " seconds");
+            normal.setText(scores[1] + " secs");
             scores[2] = 9999;
-            hard.setText("Hard: " + scores[2] + " seconds");
+            hard.setText(scores[2] + " secs");
             saveScores();
         });
         Button closeBtn = new Button ("Close");
         closeBtn.setPrefWidth(110.0);
-        closeBtn.setOnAction(e -> bestScores.close());
+        closeBtn.setOnAction(e -> statistics.close());
         VBox layout = new VBox(5);
         HBox buttons = new HBox (20);
         buttons.setAlignment(Pos.CENTER);
@@ -539,15 +579,15 @@ public class Controller implements Initializable  {
         layout.getChildren().addAll(stats,buttons);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
-        bestScores.setResizable(false);
-        bestScores.setScene(scene);
+        statistics.setResizable(false);
+        statistics.setScene(scene);
         closeBtn.requestFocus();
         Stage primaryStage = (Stage) mainAnchorPane.getScene().getWindow();
         double xPos = primaryStage.getX() + primaryStage.getWidth()/2d;
         double yPos = primaryStage.getY() + primaryStage.getHeight()/2d;
-        bestScores.setX(xPos - (width+calcDecW())/2);
-        bestScores.setY(yPos - (height+calcDecH())/2);
-        bestScores.showAndWait();
+        statistics.setX(xPos - (width+calcDecW())/2);
+        statistics.setY(yPos - (height+calcDecH())/2);
+        statistics.showAndWait();
     }
 
     @FXML
