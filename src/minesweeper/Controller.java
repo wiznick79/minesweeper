@@ -526,7 +526,7 @@ public class Controller implements Initializable  {
     @FXML
     private void statsWindow(ActionEvent actionEvent) {
         Stage statistics = new Stage();
-        double width = 500.0;
+        double width = 570.0;
         double height = 170.0;
         statistics.initModality(Modality.APPLICATION_MODAL);
         statistics.setTitle("Statistics");
@@ -539,6 +539,7 @@ public class Controller implements Initializable  {
         stats.add(new Label("Average time"),2,0);
         stats.add(new Label("Games won"),3,0);
         stats.add(new Label("Games played"),4,0);
+        stats.add(new Label("Percentage"),5,0);
         stats.add(new Label("Easy:"),0,1);
         stats.add(new Label("Normal:"),0,2);
         stats.add(new Label("Hard:"),0,3);
@@ -570,6 +571,18 @@ public class Controller implements Initializable  {
         Text gamesPlayedHardText = new Text(Integer.toString(gamesPlayedHard));
         stats.add(gamesPlayedHardText,4,3);
         GridPane.setHalignment(gamesPlayedHardText, HPos.CENTER);
+        double percentageEasy = gamesPlayedEasy > 0 ? (double) gamesWonEasy*100/gamesPlayedEasy : 0;
+        Text percentageEasyText = new Text(df.format(percentageEasy)+"%");
+        stats.add(percentageEasyText,5,1);
+        GridPane.setHalignment(percentageEasyText, HPos.CENTER);
+        double percentageNormal = gamesPlayedNormal > 0 ? (double) gamesWonNormal*100/gamesPlayedNormal : 0;
+        Text percentageNormalText = new Text(df.format(percentageNormal)+"%");
+        stats.add(percentageNormalText,5,2);
+        GridPane.setHalignment(percentageNormalText, HPos.CENTER);
+        double percentageHard = gamesPlayedHard > 0 ? (double) gamesWonHard*100/gamesPlayedHard : 0;
+        Text percentageHardText = new Text(df.format(percentageHard)+"%");
+        stats.add(percentageHardText,5,3);
+        GridPane.setHalignment(percentageHardText, HPos.CENTER);
         stats.setAlignment(Pos.CENTER);
         Button resetBtn = new Button("Reset Stats");
         resetBtn.setPrefWidth(110.0);
