@@ -4,6 +4,7 @@ Git repository : github.com/wiznick79/minesweeper/
 08/10/2019 v0.99
 - When you use the built-in cheat or you repeat a gameboard, your score cannot count as a high score.
 - The action to open adjacent tiles with double-click, can also be done by pressing left and right mouse keys at same time.
+- Improved statistics. Average time, games played and won are also being shown now.
 
 23/07/2019 v0.98
 - Added the option to repeat a gameboard
