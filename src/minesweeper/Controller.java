@@ -383,6 +383,7 @@ public class Controller implements Initializable  {
         if (win) {
             gameover.setTitle("You won!");
             l1.setText("Congratulations! You won!");
+            l1.setTextFill(Color.BLUE);
             msgLabel.setText("YOU WON!");
             msgLabel.setTextFill(Color.BLUE);
             int score = Integer.parseInt(timeLabel.getText());
@@ -415,17 +416,19 @@ public class Controller implements Initializable  {
             }
             if (highScore) {
                 l3.setText("You have the new fastest time for this difficulty!");
-                saveScores();
             }
             else if (!gboard.getDifficulty().equals("custom")) {
                 l3.setText("Best time: " + bestScore + " seconds");
             }
+            saveStats();
         }
         else {
             gameover.setTitle("You lost!");
             l1.setText("You lost!");
+            l1.setTextFill(Color.RED);
             msgLabel.setText("YOU LOST!");
             msgLabel.setTextFill(Color.RED);
+            saveStats();
         }
         pauseButton.setVisible(false);
         msgLabel.setVisible(true);
@@ -486,7 +489,6 @@ public class Controller implements Initializable  {
             }
         }
     }
-
 
     @FXML
     private void pauseGame(Gameboard gboard) {
@@ -593,7 +595,7 @@ public class Controller implements Initializable  {
             normal.setText(scores[1] + " secs");
             scores[2] = 9999;
             hard.setText(scores[2] + " secs");
-            saveScores();
+            saveStats();
         });
         Button closeBtn = new Button ("Close");
         closeBtn.setPrefWidth(110.0);
@@ -736,24 +738,39 @@ public class Controller implements Initializable  {
         return helpText.toString();
     }
 
-    private void saveScores() {
-        try (PrintWriter pw = new PrintWriter("scores.txt")) {
+    private void saveStats() {
+        try (PrintWriter pw = new PrintWriter("stats.txt")) {
             for (int i = 0; i < 3; i++)
                 pw.println(scores[i]);
+            pw.println(averageTimeEasy);
+            pw.println(averageTimeNormal);
+            pw.println(averageTimeHard);
+            pw.println(gamesPlayedEasy);
+            pw.println(gamesWonEasy);
+            pw.println(gamesPlayedNormal);
+            pw.println(gamesWonNormal);
+            pw.println(gamesPlayedHard);
+            pw.println(gamesWonHard);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     private void loadScores() {
-        try (BufferedReader br = new BufferedReader(new FileReader(new File("scores.txt")))) {
-            int i=0;
-            String line = br.readLine();
-            while (line != null) {
-                scores[i] = Integer.parseInt(line);
-                i++;
-                line = br.readLine();
+        try (BufferedReader br = new BufferedReader(new FileReader(new File("stats.txt")))) {
+            for (int i=0; i<3; i++) {
+                scores[i] = Integer.parseInt(br.readLine());
             }
+            averageTimeEasy = Double.parseDouble(br.readLine());
+            averageTimeNormal = Double.parseDouble(br.readLine());
+            averageTimeHard = Double.parseDouble(br.readLine());
+            gamesPlayedEasy = Integer.parseInt(br.readLine());
+            gamesWonEasy = Integer.parseInt(br.readLine());
+            gamesPlayedNormal = Integer.parseInt(br.readLine());
+            gamesWonNormal = Integer.parseInt(br.readLine());
+            gamesPlayedHard = Integer.parseInt(br.readLine());
+            gamesWonHard = Integer.parseInt(br.readLine());
+
         } catch (FileNotFoundException ex) {
             System.out.println("Scores file not found.");
         } catch (IOException ex) {
