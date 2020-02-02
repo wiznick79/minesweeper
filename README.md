@@ -3,3 +3,5 @@
 
 # minesweeper
 Minesweeper clone in Java/JavaFX
+If you have any questions feel free to contact me.
+Also, if someone improves it, please tell me about it, I would like to see your version!
