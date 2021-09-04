@@ -7,6 +7,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 
+import java.util.Objects;
+
 class Tile extends Button {
     private int row;
     private int col;
@@ -29,8 +31,12 @@ class Tile extends Button {
         this.setOpen(open);
     }
 
+    /**
+     *
+     * @param image
+     */
     void setImage(String image) {
-        ImageView tileView = new ImageView(new Image(getClass().getResourceAsStream(image)));
+        ImageView tileView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(image))));
         tileView.setFitHeight(TILE_SIZE);
         tileView.setFitWidth(TILE_SIZE);
         this.setPadding(new Insets(0));

@@ -23,7 +23,7 @@ class Gameboard {
 
     static Gameboard generateGameboard(int rows, int columns, int mines, String difficulty, int y, int x) {
         Tile[][] matrix = new Tile[rows][columns];
-        // initialize game metrix with empty tiles
+        // initialize game matrix with empty tiles
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 matrix[row][col] = new Tile(row,col,0,false,false,false, false);
@@ -96,7 +96,7 @@ class Gameboard {
 
     private void setDifficulty(String difficulty) { this.difficulty = difficulty; }
 
-    boolean usedCheat() { return cheat; }
+    boolean usedCheat() { return !cheat; }
 
     public void setCheat(boolean cheat) {
         this.cheat = cheat;

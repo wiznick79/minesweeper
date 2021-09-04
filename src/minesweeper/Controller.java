@@ -33,6 +33,7 @@ import javafx.util.Duration;
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable  {
@@ -391,7 +392,7 @@ public class Controller implements Initializable  {
             switch (gboard.getDifficulty()) {
                 case "easy":
                     averageTimeEasy = ((averageTimeEasy*gamesWonEasy)+score)/++gamesWonEasy;
-                    if (score < scores[0] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
+                    if (score < scores[0] && gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[0] = score;
                     }
@@ -399,7 +400,7 @@ public class Controller implements Initializable  {
                     break;
                 case "normal":
                     averageTimeNormal = ((averageTimeNormal*gamesWonNormal)+score)/++gamesWonNormal;
-                    if (score < scores[1] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
+                    if (score < scores[1] && gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[1] = score;
                     }
@@ -407,7 +408,7 @@ public class Controller implements Initializable  {
                     break;
                 case "hard":
                     averageTimeHard = ((averageTimeHard*gamesWonHard)+score)/++gamesWonHard;
-                    if (score < scores[2] && !gboard.usedCheat() && !gboard.isRepeatedBoard()) {
+                    if (score < scores[2] && gboard.usedCheat() && !gboard.isRepeatedBoard()) {
                         highScore = true;
                         scores[2] = score;
                     }
@@ -420,7 +421,6 @@ public class Controller implements Initializable  {
             else if (!gboard.getDifficulty().equals("custom")) {
                 l3.setText("Best time: " + bestScore + " seconds");
             }
-            saveStats();
         }
         else {
             gameover.setTitle("You lost!");
@@ -428,8 +428,8 @@ public class Controller implements Initializable  {
             l1.setTextFill(Color.RED);
             msgLabel.setText("YOU LOST!");
             msgLabel.setTextFill(Color.RED);
-            saveStats();
         }
+        saveStats();
         pauseButton.setVisible(false);
         msgLabel.setVisible(true);
         Button newGameBtn = new Button("New Game");
@@ -438,9 +438,9 @@ public class Controller implements Initializable  {
             generateEmptyGameGrid(gboard.getRows(), gboard.getColumns(), gboard.getMines(), gboard.getDifficulty());
             gameover.close();
         });
-        Button repeateGameBtn = new Button("Repeat board");
-        repeateGameBtn.setPrefWidth(120.0);
-        repeateGameBtn.setOnMouseClicked(e -> {
+        Button repeatGameBtn = new Button("Repeat board");
+        repeatGameBtn.setPrefWidth(120.0);
+        repeatGameBtn.setOnMouseClicked(e -> {
             repeatGame(gboard);
             gameover.close();
         });
@@ -450,7 +450,7 @@ public class Controller implements Initializable  {
         VBox layout = new VBox(5);
         HBox buttons = new HBox (10);
         buttons.setAlignment(Pos.CENTER);
-        buttons.getChildren().addAll(newGameBtn,repeateGameBtn,closeBtn);
+        buttons.getChildren().addAll(newGameBtn,repeatGameBtn,closeBtn);
         layout.getChildren().addAll(l1,l2,l3,buttons);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout,width,height);
@@ -664,7 +664,7 @@ public class Controller implements Initializable  {
         about.initModality(Modality.APPLICATION_MODAL);
         about.setTitle("About Minesweeper");
         about.initStyle(StageStyle.UTILITY);
-        Label l1 = new Label("A Minesweeper clone made in JavaFX");
+        Label l1 = new Label("A Minesweeper clone made in Java/JavaFX");
         Label l2 = new Label("by Nikolaos Perris");
         Hyperlink email = new Hyperlink("nperris@gmail.com");
         email.setStyle("-fx-border-style: hidden;");
@@ -673,7 +673,7 @@ public class Controller implements Initializable  {
             public void start(Stage stage) {}
         };
         email.setOnAction(e -> a.getHostServices().showDocument("mailto:"+email.getText()));
-        Label l3 = new Label("Copyright (c) 2019");
+        Label l3 = new Label("© 2019");
         l3.setPadding(new Insets(0,0,5,0));
         Button closeBtn = new Button ("Close");
         closeBtn.setPrefWidth(100.0);
@@ -724,7 +724,7 @@ public class Controller implements Initializable  {
 
     private String loadHelpText() {
         StringBuilder helpText = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/data/help.txt")))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/data/help.txt"))))) {
             String line = br.readLine();
             while (line != null) {
                 helpText.append(line).append("\n");
@@ -740,8 +740,9 @@ public class Controller implements Initializable  {
 
     private void saveStats() {
         try (PrintWriter pw = new PrintWriter("stats.txt")) {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++) {
                 pw.println(scores[i]);
+            }
             pw.println(averageTimeEasy);
             pw.println(averageTimeNormal);
             pw.println(averageTimeHard);
